@@ -8,10 +8,11 @@ class PseudoRandomNumberGenerator
 
     public:
         PseudoRandomNumberGenerator() {
-
+            this->seed = generateCryptographicallyInsecureSeed();
         }
-        PseudoRandomNumberGenerator(std::uint64_t seed) {
-            seed = seed;
+
+        PseudoRandomNumberGenerator(const std::uint64_t seed) {
+            this->seed = seed;
         };
 
         std::uint64_t generateCryptographicallyInsecureSeed(){
@@ -22,5 +23,5 @@ class PseudoRandomNumberGenerator
             return seed_from_milliseconds;
         }
 
-        
+        virtual uint64_t generateRandomValue() = 0;
 };
