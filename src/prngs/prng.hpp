@@ -6,7 +6,7 @@
 class PseudoRandomNumberGenerator 
 {
     private:
-        std::uint64_t seed;
+        const std::uint64_t m_seed;
 
     public:
         PseudoRandomNumberGenerator();
@@ -15,7 +15,7 @@ class PseudoRandomNumberGenerator
 
         std::uint64_t generateCryptographicallyInsecureSeed();
 
-        virtual uint64_t generateRandomValue() = 0;
+        virtual std::uint64_t generateRandomValue() = 0;
 };
 
 #endif

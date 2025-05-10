@@ -1,14 +1,13 @@
 #include <chrono>
 #include <cstdint>
+#include <random>
 #include "prng.hpp"
 
-PseudoRandomNumberGenerator::PseudoRandomNumberGenerator() {
-    this->seed = generateCryptographicallyInsecureSeed();
-};
+PseudoRandomNumberGenerator::PseudoRandomNumberGenerator() 
+    : m_seed(generateCryptographicallyInsecureSeed()) {};
 
-PseudoRandomNumberGenerator::PseudoRandomNumberGenerator(const std::uint64_t seed) {
-    this->seed = seed;
-};
+PseudoRandomNumberGenerator::PseudoRandomNumberGenerator(const std::uint64_t seed)
+    : m_seed(seed) {};
 
 std::uint64_t PseudoRandomNumberGenerator::generateCryptographicallyInsecureSeed() {
     auto current_time = std::chrono::system_clock::now();
