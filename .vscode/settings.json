@@ -68,5 +68,6 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "__nullptr": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "/home/eric/Projects/Randomizer/"
 }
