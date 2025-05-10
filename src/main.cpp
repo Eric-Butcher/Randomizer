@@ -41,6 +41,8 @@ int main(int argc, char *argv[]){
         exit(1);
     }
 
+    std::cout << "Random number between " << range.min << " and " << range.max << "\n";
+
     return 0;
     
 }
