@@ -5,7 +5,7 @@
 
 class PseudoRandomNumberGenerator 
 {
-    private:
+    protected:
         const std::uint64_t m_seed;
 
     public:
