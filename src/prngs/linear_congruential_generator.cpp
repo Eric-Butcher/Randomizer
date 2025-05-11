@@ -1,11 +1,12 @@
 #include <cstdint>
+#include <algorithm>
 #include "linear_congruential_generator.hpp"
 #include "prng.hpp"
 
 
 // Default constructor
 LinearCongruentialGenerator::LinearCongruentialGenerator()
-    : PseudoRandomNumberGenerator(getMinimumValueFromMask(DefaultMask), getMaximumValueFromMask(DefaultMask)),
+    : PseudoRandomNumberGenerator(getMinimumValue(DefaultMask), getMaximumValue(DefaultModulus, DefaultMask)),
       m_modulus(DefaultModulus),
       m_multiplier(DefaultMultiplier),
       m_increment(DefaultIncrement),
@@ -14,7 +15,7 @@ LinearCongruentialGenerator::LinearCongruentialGenerator()
 
 // Constructor with seed
 LinearCongruentialGenerator::LinearCongruentialGenerator(const std::uint64_t seed)
-    : PseudoRandomNumberGenerator(seed, getMinimumValueFromMask(DefaultMask), getMaximumValueFromMask(DefaultMask)),
+    : PseudoRandomNumberGenerator(seed, getMinimumValue(DefaultMask), getMaximumValue(DefaultModulus, DefaultMask)),
       m_modulus(DefaultModulus),
       m_multiplier(DefaultMultiplier),
       m_increment(DefaultIncrement),
@@ -23,7 +24,7 @@ LinearCongruentialGenerator::LinearCongruentialGenerator(const std::uint64_t see
 
 // Constructor with custom parameters
 LinearCongruentialGenerator::LinearCongruentialGenerator(std::uint64_t modulus, std::uint64_t multiplier, std::uint64_t increment, std::uint64_t mask)
-    : PseudoRandomNumberGenerator(getMinimumValueFromMask(mask), getMaximumValueFromMask(mask)),
+    : PseudoRandomNumberGenerator(getMinimumValue(mask), getMaximumValue(modulus, mask)),
       m_modulus(modulus),
       m_multiplier(multiplier),
       m_increment(increment),
@@ -32,7 +33,7 @@ LinearCongruentialGenerator::LinearCongruentialGenerator(std::uint64_t modulus, 
 
 // Constructor with seed and custom parameters
 LinearCongruentialGenerator::LinearCongruentialGenerator(std::uint64_t seed, std::uint64_t modulus, std::uint64_t multiplier, std::uint64_t increment, std::uint64_t mask)
-    : PseudoRandomNumberGenerator(seed, getMinimumValueFromMask(mask), getMaximumValueFromMask(mask)),
+    : PseudoRandomNumberGenerator(seed, getMinimumValue(mask), getMaximumValue(modulus, mask)),
       m_modulus(modulus),
       m_multiplier(multiplier),
       m_increment(increment),
@@ -40,17 +41,13 @@ LinearCongruentialGenerator::LinearCongruentialGenerator(std::uint64_t seed, std
       m_current_value(m_seed) {}
 
 
-// The minimum and maximum values can be determined by taking into 
-// account the bit indexes of the less significant and most significant
-// bits of the mask. The minimum value would be 2^{i} - 1, where i is the
-// index of the least significant bit of the mask. The maximum value
-// would be 2^{j} - 1, where j is the index of the most significant bit
-// of the mask.
-static std::uint64_t getMinimumValueFromMask(const std::uint64_t mask) {
+std::uint64_t LinearCongruentialGenerator::getMinimumValue(const std::uint64_t mask) {
 
     // Find the index of the least significant bit
     std::uint64_t least_significant_bit_index = 0;
     std::uint64_t least_significant_compare_mask = mask;
+
+    // We shift bits until we reach a 1, incrementing the counter each time
     while ((least_significant_compare_mask & 1) == 0) {
         least_significant_compare_mask >>= 1;
         least_significant_bit_index++;
@@ -58,16 +55,8 @@ static std::uint64_t getMinimumValueFromMask(const std::uint64_t mask) {
     return (1 << least_significant_bit_index) - 1;
 }
 
-static std::uint64_t getMaximumValueFromMask(const std::uint64_t mask) {
-    // Find the index of the most significant bit
-    std::uint64_t most_significant_bit_index = 0;
-    std::uint64_t most_significant_compare_mask = mask;
-    while (most_significant_compare_mask > 1) {
-        most_significant_compare_mask >>= 1;
-        most_significant_bit_index++;
-    }
-
-    return (1 << most_significant_bit_index) - 1;
+std::uint64_t LinearCongruentialGenerator::getMaximumValue(const std::uint64_t modulus, std::uint64_t mask) {
+    return std::min(modulus, mask);
 }
 
 // Generate a random value anywhere in the range of the LCG
@@ -76,7 +65,10 @@ std::uint64_t LinearCongruentialGenerator::generateRandomValue() {
     m_current_value = (m_multiplier * m_current_value + m_increment) % m_modulus;
 
     // Apply the mask
-    m_current_value = m_current_value & m_mask;
+    m_current_value = (m_current_value & m_mask);
+
+    // Ensure the value is within the specified range
+    m_current_value = m_current_value - m_minimum_value;
 
     return m_current_value;
 }
