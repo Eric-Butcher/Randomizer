@@ -14,6 +14,12 @@ PseudoRandomNumberGenerator::PseudoRandomNumberGenerator()
     m_minimum_value(std::numeric_limits<std::uint64_t>::min()),
     m_maximum_value(std::numeric_limits<std::uint64_t>::max()) {}
 
+
+PseudoRandomNumberGenerator::PseudoRandomNumberGenerator(const std::uint64_t seed)
+    : m_seed(seed),
+    m_minimum_value(std::numeric_limits<std::uint64_t>::min()),
+    m_maximum_value(std::numeric_limits<std::uint64_t>::max()) {}
+
 PseudoRandomNumberGenerator::PseudoRandomNumberGenerator(const std::uint64_t minimum_value, const std::uint64_t maximum_value)
     : m_seed(generateCryptographicallyInsecureSeed()),
     m_minimum_value(minimum_value),

@@ -13,6 +13,7 @@ class PseudoRandomNumberGenerator
 
     public:
         PseudoRandomNumberGenerator();
+        PseudoRandomNumberGenerator(const std::uint64_t seed);
         PseudoRandomNumberGenerator(const std::uint64_t minimum_value, const std::uint64_t maximum_value);
         PseudoRandomNumberGenerator(const std::uint64_t seed, const std::uint64_t minimum_value, const std::uint64_t maximum_value);
 
