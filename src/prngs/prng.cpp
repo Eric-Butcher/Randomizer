@@ -1,13 +1,29 @@
 #include <chrono>
 #include <cstdint>
 #include <random>
+#include <limits>
 #include "prng.hpp"
 
+/* The most default constructor will create a random seed from the system time
+and assume that the range of the PRNG is the full range of the unsigned 64-bit 
+integer. While this is the only sensible default option, it is dangerous as it is
+not generally true and will likely have the PRNG produce highly incorrect values when
+generating uniform random floats. Use with caution! */
 PseudoRandomNumberGenerator::PseudoRandomNumberGenerator() 
-    : m_seed(generateCryptographicallyInsecureSeed()) {};
+    : m_seed(generateCryptographicallyInsecureSeed()),
+    m_minimum_value(std::numeric_limits<std::uint64_t>::min()),
+    m_maximum_value(std::numeric_limits<std::uint64_t>::max()) {}
 
-PseudoRandomNumberGenerator::PseudoRandomNumberGenerator(const std::uint64_t seed)
-    : m_seed(seed) {};
+PseudoRandomNumberGenerator::PseudoRandomNumberGenerator(const std::uint64_t minimum_value, const std::uint64_t maximum_value)
+    : m_seed(generateCryptographicallyInsecureSeed()),
+    m_minimum_value(minimum_value),
+    m_maximum_value(maximum_value) {}
+
+
+PseudoRandomNumberGenerator::PseudoRandomNumberGenerator(const std::uint64_t seed, const std::uint64_t minimum_value, const std::uint64_t maximum_value)
+    : m_seed(seed),
+    m_minimum_value(minimum_value),
+    m_maximum_value(maximum_value) {}
 
 std::uint64_t PseudoRandomNumberGenerator::generateCryptographicallyInsecureSeed() {
     auto current_time = std::chrono::system_clock::now();

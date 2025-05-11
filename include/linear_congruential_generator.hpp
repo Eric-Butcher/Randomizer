@@ -40,6 +40,17 @@ private:
     const std::uint64_t m_mask;
     std::uint64_t m_current_value = 0; 
 
+
+    // The minimum and maximum values can be determined by taking into 
+    // account the bit indexes of the less significant and most significant
+    // bits of the mask. The minimum value would be 2^{i} - 1, where i is the
+    // index of the least significant bit of the mask. The maximum value
+    // would be 2^{j} - 1, where j is the index of the most significant bit
+    // of the mask.
+    static std::uint64_t getMinimumValueFromMask(const std::uint64_t mask);
+
+    static std::uint64_t getMaximumValueFromMask(const std::uint64_t mask);
+
 public:
     LinearCongruentialGenerator();
     LinearCongruentialGenerator(const std::uint64_t seed);
@@ -47,6 +58,7 @@ public:
     LinearCongruentialGenerator(std::uint64_t seed, std::uint64_t modulus, std::uint64_t multiplier, std::uint64_t increment, std::uint64_t mask);
 
     std::uint64_t generateRandomValue() override;
+    double generateUnitNormalRandomValue() override;
 };
 
 #endif
