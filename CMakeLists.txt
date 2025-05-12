@@ -17,3 +17,6 @@ file(GLOB_RECURSE HEADERS "include/*.hpp")
 
 # Define main executable
 add_executable(${PROJECT_NAME} ${SOURCES})
+
+enable_testing()
+add_subdirectory(tests)
