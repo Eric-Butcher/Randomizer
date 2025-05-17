@@ -67,7 +67,10 @@
         "cinttypes": "cpp",
         "typeindex": "cpp",
         "typeinfo": "cpp",
-        "__nullptr": "cpp"
+        "__nullptr": "cpp",
+        "any": "cpp",
+        "variant": "cpp",
+        "__locale": "cpp"
     },
     "cmake.sourceDirectory": "/home/eric/Projects/Randomizer/"
 }

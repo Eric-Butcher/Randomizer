@@ -3,8 +3,9 @@
 #include <cstdlib>
 #include <optional>
 #include <variant>
+#include "program_runner.hpp"
 
-void print_usage(const char* program_name) {
+void ProgramRunner::print_help() {
     std::cout << "Usage: " << program_name << " [options]\n"
               << "Options:\n"
               << "  -h, --help           Show this help message\n"
@@ -18,56 +19,14 @@ void print_usage(const char* program_name) {
               << "  -i, --integer        Generate integer random numbers\n";
 }   
 
-enum class Algorithms {
-    XORShift,
-    LinearCongruentialGenerator,
-    // Add other algorithms here
-};
-
-std::optional<Algorithms> get_algorithm(const std::string& algorithm_str) {
-    if (algorithm_str == "xorshift") {
-        return Algorithms::XORShift;
-    } else if (algorithm_str == "lcg" or algorithm_str == "linear-congruential-generator") {
-        return Algorithms::LinearCongruentialGenerator;
-    }
-    return std::nullopt; // Unknown algorithm
+void ProgramRunner::print_version() {
+    std::cout << "Random Number Generator " << version << "\n";
 }
 
-enum class ProgramBehaviour {
-    Error,
-    Help,
-    Version,
-    GenerateUnitNormal,
-    GenerateFloating,
-    GenerateInteger
-};
 
-struct ProgramConfiguration {
-    ProgramBehaviour option;
-    Algorithms algorithm;
-    std::optional<std::variant<std::uint64_t, std::int64_t, double>> min;
-    std::optional<std::variant<std::uint64_t, std::int64_t, double>> max;
-    std::optional<std::uint64_t> count;
-};
-
-struct RawArguments {
-    bool error;
-    bool show_help;
-    bool show_version;
-    bool unit;
-    bool floating;
-    bool integer;
-    std::string algorithm_str;
-    std::string min_str;
-    std::string max_str;
-    std::string count_str;
-};
-
-
-
-RawArguments parse_args(int argc, char* argv[]) {
+ProgramRunner::RawArguments ProgramRunner::parse_args(int argc, char **argv) {
     const char* const short_opts = "hva:m:M:c:ufi";
-    const option long_opts[] = {
+    const ::option long_opts[] = {
         {"help", no_argument, nullptr, 'h'},
         {"version", no_argument, nullptr, 'v'},
         {"algorithm", required_argument, nullptr, 'a'},
