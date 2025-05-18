@@ -90,7 +90,9 @@ void ProgramRunner::determine_program_configuration(const ProgramRunner::RawArgu
     } else if (raw_args.show_version){
         this->behaviour = ProgramBehaviour::Version;
         return;
-    } 
+    } else if (raw_args.show_help){
+        this->behaviour = ProgramBehaviour::Help;
+    }
     
      if (!raw_args.algorithm_str.has_value()){
         this->algorithm = Algorithm::XORShift; // default algorithm to use
