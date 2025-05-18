@@ -18,11 +18,23 @@ public:
 
 private:
 
+    // Defaults
+
+    static constexpr uint32_t DefaultCount = 1;
+    static constexpr int64_t DefaultMin = 1;
+    static constexpr int64_t DefaultMax = 6;
 
     enum class Algorithm {
         XORShift,
         LinearCongruentialGenerator,
         // Add other algorithms here
+    };
+
+    const std::map<std::string, Algorithm> algorithm_choices {
+        {"xorshift", Algorithm::XORShift},
+        {"xor", Algorithm::XORShift},
+        {"linear-congruential-generator", Algorithm::LinearCongruentialGenerator},
+        {"lcg", Algorithm::LinearCongruentialGenerator}
     };
 
 
@@ -36,30 +48,46 @@ private:
         GenerateInteger
     };
 
+    const std::map<std::string, ProgramBehaviour> generation_types {
+        {"unit", ProgramBehaviour::GenerateUnitNormal},
+        {"normal", ProgramBehaviour::GenerateUnitNormal},
+        {"unit-normal", ProgramBehaviour::GenerateUnitNormal},
+        {"normalized", ProgramBehaviour::GenerateUnitNormal},
+        {"float", ProgramBehaviour::GenerateFloating},
+        {"floating", ProgramBehaviour::GenerateFloating},
+        {"decimal", ProgramBehaviour::GenerateFloating},
+        {"floating-point", ProgramBehaviour::GenerateFloating},
+        {"int", ProgramBehaviour::GenerateInteger},
+        {"integer", ProgramBehaviour::GenerateInteger}
+    };
+
     struct RawArguments {
+        // what special strings should we show?
+
         bool error;
         bool show_help;
         bool show_version;
-        bool unit;
-        bool floating;
-        bool integer;
-        std::string algorithm_str;
-        std::string min_str;
-        std::string max_str;
-        std::string count_str;
+
+        // how do we want to generate the random numbers?
+        std::optional<std::string> type;
+
+        std::optional<std::string> algorithm_str;
+        std::optional<std::string> min_str;
+        std::optional<std::string> max_str;
+        std::optional<std::string> count_str;
     };
 
     RawArguments parse_args(int argc, char **argv);
+    void determine_program_configuration(const RawArguments raw_Arguments);
+    bool erroneous_flag_args_provided(const RawArguments raw_Arguments);
     void print_help();
     void print_version();
 
-    ProgramBehaviour option;
+    ProgramBehaviour behaviour;
     std::optional<Algorithm> algorithm;
-    std::optional<std::variant<std::uint64_t, std::int64_t, double>> min;
-    std::optional<std::variant<std::uint64_t, std::int64_t, double>> max;
-    std::optional<std::uint64_t> count;
-
-
+    std::optional<std::variant<int64_t, double>> min;
+    std::optional<std::variant<int64_t, double>> max;
+    std::optional<uint32_t> count;
 
 
 };

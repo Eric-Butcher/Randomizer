@@ -70,7 +70,13 @@
         "__nullptr": "cpp",
         "any": "cpp",
         "variant": "cpp",
-        "__locale": "cpp"
+        "__locale": "cpp",
+        "charconv": "cpp",
+        "__hash_table": "cpp",
+        "__split_buffer": "cpp",
+        "__tree": "cpp",
+        "queue": "cpp",
+        "stack": "cpp"
     },
     "cmake.sourceDirectory": "/home/eric/Projects/Randomizer/"
 }
