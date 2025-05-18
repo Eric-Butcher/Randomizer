@@ -83,6 +83,34 @@ std::optional<std::pair<double, double>> parse_min_and_max_doubles(const std::st
     return std::nullopt;
 }
 
+void ProgramRunner::determine_generation_configuration(const std::optional<std::string> &min_str, const std::optional<std::string> &max_str){
+    bool both_max_and_min_specified = min_str.has_value() && max_str.has_value();
+    bool neither_max_or_min_specified = !min_str.has_value() && !max_str.has_value();
+    if (both_max_and_min_specified && this->behaviour == ProgramBehaviour::GenerateInteger){
+        auto min_and_max = parse_min_and_max_integers(min_str.value(), max_str.value());
+        if (!min_and_max.has_value()){
+            this->behaviour = ProgramBehaviour::Error;
+            return;
+        }
+        this->min = min_and_max.value().first;
+        this->max = min_and_max.value().second;
+    } else if (both_max_and_min_specified && this->behaviour == ProgramBehaviour::GenerateFloating){
+        auto min_and_max = parse_min_and_max_doubles(min_str.value(), max_str.value());
+        if (!min_and_max.has_value()){
+            this->behaviour = ProgramBehaviour::Error;
+            return;
+        }
+        this->min = min_and_max.value().first;
+        this->max = min_and_max.value().second;
+    } else if (neither_max_or_min_specified && this->behaviour == ProgramBehaviour::GenerateUnitNormal){
+        this->min = DefaultMin;
+        this->max = DefaultMax;
+    } else {
+        this->behaviour = ProgramBehaviour::Error;
+        return;
+    }
+}
+
 void ProgramRunner::determine_program_configuration(const ProgramRunner::RawArguments raw_args){
     if (raw_args.error){
         this->behaviour = ProgramBehaviour::Error;
@@ -122,33 +150,9 @@ void ProgramRunner::determine_program_configuration(const ProgramRunner::RawArgu
         this->count = DefaultCount;
      }
 
+     determine_generation_configuration(raw_args.min_str, raw_args.max_str);
 
 
-     bool both_max_and_min_specified = raw_args.min_str.has_value() && raw_args.max_str.has_value();
-     bool neither_max_or_min_specified = !raw_args.min_str.has_value() && !raw_args.max_str.has_value();
-     if (both_max_and_min_specified && this->behaviour == ProgramBehaviour::GenerateInteger){
-        auto min_and_max = parse_min_and_max_integers(raw_args.min_str.value(), raw_args.max_str.value());
-        if (!min_and_max.has_value()){
-            this->behaviour = ProgramBehaviour::Error;
-            return;
-        }
-        this->min = min_and_max.value().first;
-        this->max = min_and_max.value().second;
-     } else if (both_max_and_min_specified && this->behaviour == ProgramBehaviour::GenerateFloating){
-        auto min_and_max = parse_min_and_max_doubles(raw_args.min_str.value(), raw_args.max_str.value());
-        if (!min_and_max.has_value()){
-            this->behaviour = ProgramBehaviour::Error;
-            return;
-        }
-        this->min = min_and_max.value().first;
-        this->max = min_and_max.value().second;
-     } else if (neither_max_or_min_specified && this->behaviour == ProgramBehaviour::GenerateUnitNormal){
-        this->min = DefaultMin;
-        this->max = DefaultMax;
-     } else {
-        this->behaviour = ProgramBehaviour::Error;
-        return;
-     }
 
      return;
 }

@@ -79,6 +79,8 @@ private:
 
     RawArguments parse_args(int argc, char **argv);
     void determine_program_configuration(const RawArguments raw_Arguments);
+    void determine_generation_configuration(const std::optional<std::string> &min_str, const std::optional<std::string> &max_str);
+
     bool erroneous_flag_args_provided(const RawArguments raw_Arguments);
     void print_help();
     void print_version();
