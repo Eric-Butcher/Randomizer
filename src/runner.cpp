@@ -111,25 +111,36 @@ void ProgramRunner::determine_generation_configuration(const std::optional<std::
     }
 }
 
-void ProgramRunner::determine_program_configuration(const ProgramRunner::RawArguments raw_args){
-    if (raw_args.error){
+void ProgramRunner::determine_user_message_configuration(const bool error, const bool show_version, const bool show_help){
+    if (error){
         this->behaviour = ProgramBehaviour::Error;
         return;
-    } else if (raw_args.show_version){
+    } else if (show_version){
         this->behaviour = ProgramBehaviour::Version;
         return;
-    } else if (raw_args.show_help){
+    } else if (show_help){
         this->behaviour = ProgramBehaviour::Help;
-    }
-    
-     if (!raw_args.algorithm_str.has_value()){
-        this->algorithm = Algorithm::XORShift; // default algorithm to use
-     } else if (algorithm_choices.contains(raw_args.algorithm_str.value())) { // TODO: this check/get can be made more efficient using find
-        this->algorithm = algorithm_choices.at(raw_args.algorithm_str.value());
-     } else {
-        this->behaviour = ProgramBehaviour::Error;
         return;
-     }
+    }
+}
+
+void ProgramRunner::determine_algorithm_configuration(const std::optional<std::string> &alg_str){
+    if (!alg_str.has_value()){
+        this->algorithm = Algorithm::XORShift; // default algorithm to use
+    } else if (algorithm_choices.contains(alg_str.value())) { // TODO: this check/get can be made more efficient using find
+        this->algorithm = algorithm_choices.at(alg_str.value());
+    } else {
+        this->behaviour = ProgramBehaviour::Error;
+    return;
+    }
+}
+
+void ProgramRunner::determine_program_configuration(const ProgramRunner::RawArguments raw_args){
+
+    determine_user_message_configuration(raw_args.error, raw_args.show_version, raw_args.show_help);
+
+    determine_algorithm_configuration(raw_args.algorithm_str);
+
 
      if (!raw_args.type.has_value()){
         this->behaviour = ProgramBehaviour::GenerateInteger;
