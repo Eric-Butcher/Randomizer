@@ -83,7 +83,7 @@ std::optional<std::pair<double, double>> parse_min_and_max_doubles(const std::st
     return std::nullopt;
 }
 
-void ProgramRunner::determine_generation_configuration(const std::optional<std::string> &min_str, const std::optional<std::string> &max_str){
+void ProgramRunner::determine_generation_range_configuration(const std::optional<std::string> &min_str, const std::optional<std::string> &max_str){
     bool both_max_and_min_specified = min_str.has_value() && max_str.has_value();
     bool neither_max_or_min_specified = !min_str.has_value() && !max_str.has_value();
     if (both_max_and_min_specified && this->behaviour == ProgramBehaviour::GenerateInteger){
@@ -135,20 +135,24 @@ void ProgramRunner::determine_algorithm_configuration(const std::optional<std::s
     }
 }
 
+void ProgramRunner::determine_generation_type_configuration(const std::optional<std::string> &generation_type){
+    if (!generation_type.has_value()){
+        this->behaviour = ProgramBehaviour::GenerateInteger;
+    } else if (generation_types.contains(generation_type.value())){
+        this->behaviour = generation_types.at(generation_type.value());
+    } else {
+        this->behaviour = ProgramBehaviour::Error;
+    }
+}
+
 void ProgramRunner::determine_program_configuration(const ProgramRunner::RawArguments raw_args){
 
     determine_user_message_configuration(raw_args.error, raw_args.show_version, raw_args.show_help);
 
     determine_algorithm_configuration(raw_args.algorithm_str);
 
+    determine_generation_type_configuration(raw_args.type);
 
-     if (!raw_args.type.has_value()){
-        this->behaviour = ProgramBehaviour::GenerateInteger;
-     } else if (generation_types.contains(raw_args.type.value())){
-        this->behaviour = generation_types.at(raw_args.type.value());
-     } else {
-        this->behaviour = ProgramBehaviour::Error;
-     }
 
      if (raw_args.count_str.has_value()){
         std::optional<uint32_t> count_val = parse_count_value(raw_args.count_str.value());
@@ -161,7 +165,7 @@ void ProgramRunner::determine_program_configuration(const ProgramRunner::RawArgu
         this->count = DefaultCount;
      }
 
-     determine_generation_configuration(raw_args.min_str, raw_args.max_str);
+     determine_generation_range_configuration(raw_args.min_str, raw_args.max_str);
 
 
 
