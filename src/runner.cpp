@@ -19,19 +19,12 @@ void ProgramRunner::print_help() {
               << "  -m, --min            Minimum value\n"
               << "  -M, --max            Maximum value\n"
               << "  -c, --count          Number of random numbers to generate\n"
-              << "  -t, --type           Specify the type to output\n"
-              << "  -f, --float          Generate floating-point random numbers\n"
-              << "  -i, --integer        Generate integer random numbers\n";
+              << "  -t, --type           Specify the type to output\n";
 }   
 
 void ProgramRunner::print_version() {
     std::cout << "Random Number Generator " << version << "\n";
 }
-
-bool ProgramRunner::erroneous_flag_args_provided(const ProgramRunner::RawArguments raw_arguments){
-
-}
-
 
 
 // Parses a string to uint32_t, returns std::nullopt on error or out-of-range
