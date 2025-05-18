@@ -82,7 +82,8 @@ private:
     void determine_user_message_configuration(const bool error, const bool show_version, const bool show_help);
     void determine_generation_range_configuration(const std::optional<std::string> &min_str, const std::optional<std::string> &max_str);
     void determine_generation_type_configuration(const std::optional<std::string> &generation_type);
-    void ProgramRunner::determine_algorithm_configuration(const std::optional<std::string> &alg_str);
+    void determine_count_configuration(const std::optional<std::string> &count_str);
+    void determine_algorithm_configuration(const std::optional<std::string> &alg_str);
 
     bool erroneous_flag_args_provided(const RawArguments raw_Arguments);
     void print_help();

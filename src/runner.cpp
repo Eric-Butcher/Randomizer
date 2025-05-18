@@ -145,31 +145,39 @@ void ProgramRunner::determine_generation_type_configuration(const std::optional<
     }
 }
 
-void ProgramRunner::determine_program_configuration(const ProgramRunner::RawArguments raw_args){
-
-    determine_user_message_configuration(raw_args.error, raw_args.show_version, raw_args.show_help);
-
-    determine_algorithm_configuration(raw_args.algorithm_str);
-
-    determine_generation_type_configuration(raw_args.type);
-
-
-     if (raw_args.count_str.has_value()){
-        std::optional<uint32_t> count_val = parse_count_value(raw_args.count_str.value());
+void ProgramRunner::determine_count_configuration(const std::optional<std::string> &count_str){
+    if (count_str.has_value()){
+        std::optional<uint32_t> count_val = parse_count_value(count_str.value());
         if (!count_val.has_value()){
             this->behaviour = ProgramBehaviour::Error;
             return;
         }
         this->count = count_val;
-     } else {
+    } else {
         this->count = DefaultCount;
-     }
-
-     determine_generation_range_configuration(raw_args.min_str, raw_args.max_str);
-
+    }
+}
 
 
-     return;
+void ProgramRunner::determine_program_configuration(const ProgramRunner::RawArguments raw_args){
+
+    determine_user_message_configuration(raw_args.error, raw_args.show_version, raw_args.show_help);
+    if (this->behaviour == ProgramBehaviour::Error || this->behaviour == ProgramBehaviour::Version || this->behaviour == ProgramBehaviour::Help){
+        return;
+    }
+
+    determine_algorithm_configuration(raw_args.algorithm_str);
+    if (this->behaviour == ProgramBehaviour::Error) return
+
+    determine_generation_type_configuration(raw_args.type);
+    if (this->behaviour == ProgramBehaviour::Error) return
+
+    determine_count_configuration(raw_args.count_str);
+    if (this->behaviour == ProgramBehaviour::Error) return
+
+    determine_generation_range_configuration(raw_args.min_str, raw_args.max_str);
+
+    return;
 }
 
 ProgramRunner::RawArguments ProgramRunner::parse_args(int argc, char **argv) {
