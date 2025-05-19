@@ -9,6 +9,10 @@
 #include "program_runner.hpp"
 
 
+void ProgramRunner::print_error() {
+    std::cerr << program_name << ": bad usage\n"
+              << "Try 'randomizer --help' for more information.\n";
+}
 
 void ProgramRunner::print_help() {
     std::cout << "Usage: " << program_name << " [options]\n"
@@ -18,12 +22,12 @@ void ProgramRunner::print_help() {
               << "  -a, --algorithm      Specify the algorithm (default: xorshift)\n"
               << "  -m, --min            Minimum value\n"
               << "  -M, --max            Maximum value\n"
-              << "  -c, --count          Number of random numbers to generate\n"
+              << "  -c, --count          Number of random numbers to generate (default: 1)\n"
               << "  -t, --type           Specify the type to output (default: unit)\n";
 }   
 
 void ProgramRunner::print_version() {
-    std::cout << "Random Number Generator " << version << "\n";
+    std::cout << program_name << " " << version << "\n";
 }
 
 
@@ -83,8 +87,7 @@ void ProgramRunner::determine_generation_range_configuration(const std::optional
         this->min = min_and_max.value().first;
         this->max = min_and_max.value().second;
     } else if (neither_max_or_min_specified && this->behaviour == ProgramBehaviour::GenerateUnitNormal){
-        this->min = DefaultMin;
-        this->max = DefaultMax;
+        return;
     } else {
         this->behaviour = ProgramBehaviour::Error;
         return;
@@ -111,7 +114,6 @@ void ProgramRunner::determine_algorithm_configuration(const std::optional<std::s
         this->algorithm = algorithm_choices.at(alg_str.value());
     } else {
         this->behaviour = ProgramBehaviour::Error;
-    return;
     }
 }
 
@@ -142,18 +144,25 @@ void ProgramRunner::determine_count_configuration(const std::optional<std::strin
 void ProgramRunner::determine_program_configuration(const ProgramRunner::RawArguments raw_args){
 
     determine_user_message_configuration(raw_args.error, raw_args.show_version, raw_args.show_help);
-    if (this->behaviour == ProgramBehaviour::Error || this->behaviour == ProgramBehaviour::Version || this->behaviour == ProgramBehaviour::Help){
+    auto &behave = this->behaviour;
+    if (behave.has_value() && (behave == ProgramBehaviour::Error || behave == ProgramBehaviour::Version || behave == ProgramBehaviour::Help)){
         return;
     }
 
     determine_algorithm_configuration(raw_args.algorithm_str);
-    if (this->behaviour == ProgramBehaviour::Error) return
+    if (behave.has_value() && behave == ProgramBehaviour::Error){
+        return;
+    }
 
     determine_generation_type_configuration(raw_args.type);
-    if (this->behaviour == ProgramBehaviour::Error) return
+    if (behave.has_value() && behave == ProgramBehaviour::Error){
+        return;
+    }
 
     determine_count_configuration(raw_args.count_str);
-    if (this->behaviour == ProgramBehaviour::Error) return
+    if (behave.has_value() && behave == ProgramBehaviour::Error){
+        return;
+    }
 
     determine_generation_range_configuration(raw_args.min_str, raw_args.max_str);
 
@@ -227,8 +236,19 @@ ProgramRunner::RawArguments ProgramRunner::parse_args(int argc, char **argv) {
 ProgramRunner::ProgramRunner(int argc, char **argv){
     RawArguments raw_arguments = parse_args(argc, argv);
     determine_program_configuration(raw_arguments);
-    std::cout << (int) this->behaviour << '\n';
-    std::cout << (int) this->algorithm.value() << '\n';
-    std::cout << count.value() << std::endl;
+    
+    if (this->behaviour.value() == ProgramBehaviour::Error){
+        print_error();
+        exit(1);
+    } else if (this->behaviour.value() == ProgramBehaviour::Help){
+        print_help();
+        exit(0);
+    } else if (this->behaviour.value() == ProgramBehaviour::Version){
+        print_version();
+        exit(0);
+    } else {
+        std::cout << "You got to another type of state!" << std::endl;
+        exit(0);
+    }
 
 }

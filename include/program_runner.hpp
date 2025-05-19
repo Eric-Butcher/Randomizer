@@ -18,12 +18,6 @@ public:
 
 private:
 
-    // Defaults
-
-    static constexpr uint32_t DefaultCount = 1;
-    static constexpr int64_t DefaultMin = 1;
-    static constexpr int64_t DefaultMax = 6;
-
     enum class Algorithm {
         XORShift,
         LinearCongruentialGenerator,
@@ -77,6 +71,11 @@ private:
         std::optional<std::string> count_str;
     };
 
+    
+    // Defaults
+
+    static constexpr uint32_t DefaultCount = 1;
+
     RawArguments parse_args(int argc, char **argv);
     void determine_program_configuration(const RawArguments raw_Arguments);
     void determine_user_message_configuration(const bool error, const bool show_version, const bool show_help);
@@ -86,14 +85,15 @@ private:
     void determine_algorithm_configuration(const std::optional<std::string> &alg_str);
 
     bool erroneous_flag_args_provided(const RawArguments raw_Arguments);
+    void print_error();
     void print_help();
     void print_version();
 
-    ProgramBehaviour behaviour;
-    std::optional<Algorithm> algorithm;
-    std::optional<std::variant<int64_t, double>> min;
-    std::optional<std::variant<int64_t, double>> max;
-    std::optional<uint32_t> count;
+    std::optional<ProgramBehaviour> behaviour = std::nullopt;
+    std::optional<Algorithm> algorithm = std::nullopt;
+    std::optional<std::variant<int64_t, double>> min = std::nullopt;
+    std::optional<std::variant<int64_t, double>> max = std::nullopt;
+    std::optional<uint32_t> count = std::nullopt;
 
 
 };
