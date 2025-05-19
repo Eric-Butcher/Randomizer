@@ -19,7 +19,7 @@ void ProgramRunner::print_help() {
               << "  -m, --min            Minimum value\n"
               << "  -M, --max            Maximum value\n"
               << "  -c, --count          Number of random numbers to generate\n"
-              << "  -t, --type           Specify the type to output\n";
+              << "  -t, --type           Specify the type to output (default: unit)\n";
 }   
 
 void ProgramRunner::print_version() {
@@ -37,57 +37,37 @@ std::optional<uint32_t> parse_count_value(const std::string &count_str) {
     return value;
 }
 
-std::optional<std::pair<int64_t, int64_t>> parse_min_and_max_integers(const std::string &min_str, const std::string &max_str) {
-    int64_t min_value;
-    const auto [ptr, ec] = std::from_chars(min_str.data(), min_str.data() + min_str.size(), min_value);
-    if (ec != std::errc() || ptr != min_str.data() + min_str.size()) {
-        return std::nullopt; // Parsing failed or extra characters present
+
+template <typename T>
+concept FromCharsParsable = std::is_integral_v<T> || std::is_floating_point_v<T>;
+
+
+// Helper function for parsing a string to a numeric type using std::from_chars
+template <FromCharsParsable T>
+std::optional<T> parse_value(const std::string& str) {
+    T value;
+    auto result = std::from_chars(str.data(), str.data() + str.size(), value);
+    if (result.ec != std::errc() || result.ptr != str.data() + str.size()) {
+        return std::nullopt;
     }
+    return value;
+}
 
-    int64_t max_value;
-    const auto [ptr, ec] = std::from_chars(max_str.data(), max_str.data() + max_str.size(), max_value);
-    if (ec != std::errc() || ptr != max_str.data() + max_str.size()) {
-        return std::nullopt; // Parsing failed or extra characters present
-    }
-
-    if (min_value <= max_value) {
-        std::pair<int64_t, int64_t> range = {min_value, max_value};
-        std::optional<std::pair<int64_t, int64_t>> range_opt = range;
-        return range_opt;
-    }
-
-
+template <FromCharsParsable T>
+std::optional<std::pair<T, T>> parse_min_and_max_numbers(const std::string &min_str, const std::string &max_str) {
+    std::optional<T> min_value = parse_value<T>(min_str);
+    std::optional<T> max_value = parse_value<T>(max_str);
+    if (!min_value.has_value() || !max_value.has_value()) return std::nullopt;
+    if (min_value.value() <= max_value.value()) return std::make_pair(min_value.value(), max_value.value());
     return std::nullopt;
 }
 
-std::optional<std::pair<double, double>> parse_min_and_max_doubles(const std::string &min_str, const std::string &max_str) {
-    double min_value;
-    const auto [ptr, ec] = std::from_chars(min_str.data(), min_str.data() + min_str.size(), min_value);
-    if (ec != std::errc() || ptr != min_str.data() + min_str.size()) {
-        return std::nullopt; // Parsing failed or extra characters present
-    }
-
-    double max_value;
-    const auto [ptr, ec] = std::from_chars(max_str.data(), max_str.data() + max_str.size(), max_value);
-    if (ec != std::errc() || ptr != max_str.data() + max_str.size()) {
-        return std::nullopt; // Parsing failed or extra characters present
-    }
-
-    if (min_value <= max_value) {
-        std::pair<double, double> range = {min_value, max_value};
-        std::optional<std::pair<double, double>> range_opt = range;
-        return range_opt;
-    }
-
-
-    return std::nullopt;
-}
 
 void ProgramRunner::determine_generation_range_configuration(const std::optional<std::string> &min_str, const std::optional<std::string> &max_str){
     bool both_max_and_min_specified = min_str.has_value() && max_str.has_value();
     bool neither_max_or_min_specified = !min_str.has_value() && !max_str.has_value();
     if (both_max_and_min_specified && this->behaviour == ProgramBehaviour::GenerateInteger){
-        auto min_and_max = parse_min_and_max_integers(min_str.value(), max_str.value());
+        auto min_and_max = parse_min_and_max_numbers<int64_t>(min_str.value(), max_str.value());
         if (!min_and_max.has_value()){
             this->behaviour = ProgramBehaviour::Error;
             return;
@@ -95,7 +75,7 @@ void ProgramRunner::determine_generation_range_configuration(const std::optional
         this->min = min_and_max.value().first;
         this->max = min_and_max.value().second;
     } else if (both_max_and_min_specified && this->behaviour == ProgramBehaviour::GenerateFloating){
-        auto min_and_max = parse_min_and_max_doubles(min_str.value(), max_str.value());
+        auto min_and_max = parse_min_and_max_numbers<double>(min_str.value(), max_str.value());
         if (!min_and_max.has_value()){
             this->behaviour = ProgramBehaviour::Error;
             return;
@@ -242,4 +222,13 @@ ProgramRunner::RawArguments ProgramRunner::parse_args(int argc, char **argv) {
     }
 
     return raw_arguments;
+}
+
+ProgramRunner::ProgramRunner(int argc, char **argv){
+    RawArguments raw_arguments = parse_args(argc, argv);
+    determine_program_configuration(raw_arguments);
+    std::cout << (int) this->behaviour << '\n';
+    std::cout << (int) this->algorithm.value() << '\n';
+    std::cout << count.value() << std::endl;
+
 }
