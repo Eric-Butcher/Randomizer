@@ -10,24 +10,24 @@ TEST(TestXORShift, BlankConstructor) {
 }
 
 TEST(TestXORShift, SeedConstructor) {
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<std::uint64_t>::min()));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<std::uint64_t>::min() + 1));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<std::uint64_t>::min() + 5));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<std::uint64_t>::max() / 5));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<std::uint64_t>::max() / 2));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<std::uint64_t>::max() - 1));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<std::uint64_t>::max()));
+    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::min()));
+    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::min() + 1));
+    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::min() + 5));
+    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::max() / 5));
+    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::max() / 2));
+    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::max() - 1));
+    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::max()));
 }
 
 
 TEST(TestXORShift, SeedAndConstantsConstructor) {
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<std::uint64_t>::min(), 1, 2, 3));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<std::uint64_t>::min() + 1, 79, 55555, std::numeric_limits<std::uint64_t>::max()));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<std::uint64_t>::min() + 5, 4545, 9876567, 9876786));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<std::uint64_t>::max() / 5, 1432, 6876, 3));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<std::uint64_t>::max() / 2, 42, 42, 42));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<std::uint64_t>::max() - 1, 2345678987, 9876543, 123422));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<std::uint64_t>::max(), 345679875, 2, 0));
+    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::min(), 1, 2, 3));
+    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::min() + 1, 79, 55555, std::numeric_limits<uint64_t>::max()));
+    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::min() + 5, 4545, 9876567, 9876786));
+    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::max() / 5, 1432, 6876, 3));
+    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::max() / 2, 42, 42, 42));
+    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::max() - 1, 2345678987, 9876543, 123422));
+    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::max(), 345679875, 2, 0));
 }
 
 

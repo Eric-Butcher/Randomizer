@@ -11,22 +11,22 @@ not generally true and will likely have the PRNG produce highly incorrect values
 generating uniform random floats. Use with caution! */
 PseudoRandomNumberGenerator::PseudoRandomNumberGenerator() 
     : m_seed(generateCryptographicallyInsecureSeed()),
-    m_minimum_value(std::numeric_limits<std::uint64_t>::min()),
-    m_maximum_value(std::numeric_limits<std::uint64_t>::max()) {}
+    m_minimum_value(std::numeric_limits<uint64_t>::min()),
+    m_maximum_value(std::numeric_limits<uint64_t>::max()) {}
 
 
-PseudoRandomNumberGenerator::PseudoRandomNumberGenerator(const std::uint64_t seed)
+PseudoRandomNumberGenerator::PseudoRandomNumberGenerator(const uint64_t seed)
     : m_seed(seed),
-    m_minimum_value(std::numeric_limits<std::uint64_t>::min()),
-    m_maximum_value(std::numeric_limits<std::uint64_t>::max()) {}
+    m_minimum_value(std::numeric_limits<uint64_t>::min()),
+    m_maximum_value(std::numeric_limits<uint64_t>::max()) {}
 
-PseudoRandomNumberGenerator::PseudoRandomNumberGenerator(const std::uint64_t minimum_value, const std::uint64_t maximum_value)
+PseudoRandomNumberGenerator::PseudoRandomNumberGenerator(const uint64_t minimum_value, const uint64_t maximum_value)
     : m_seed(generateCryptographicallyInsecureSeed()),
     m_minimum_value(minimum_value),
     m_maximum_value(maximum_value) {}
 
 
-PseudoRandomNumberGenerator::PseudoRandomNumberGenerator(const std::uint64_t seed, const std::uint64_t minimum_value, const std::uint64_t maximum_value)
+PseudoRandomNumberGenerator::PseudoRandomNumberGenerator(const uint64_t seed, const uint64_t minimum_value, const uint64_t maximum_value)
     : m_seed(seed),
     m_minimum_value(minimum_value),
     m_maximum_value(maximum_value) {}
@@ -35,6 +35,6 @@ std::uint64_t PseudoRandomNumberGenerator::generateCryptographicallyInsecureSeed
     auto current_time = std::chrono::system_clock::now();
     auto current_time_duration = current_time.time_since_epoch(); // convert a bare time to a duration
     auto time_as_milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(current_time_duration); // get the duration as a value in milliseconds
-    std::uint64_t seed_from_milliseconds = time_as_milliseconds.count(); // convert the milliseconds to a bare integer and use that as our seed
+    uint64_t seed_from_milliseconds = time_as_milliseconds.count(); // convert the milliseconds to a bare integer and use that as our seed
     return seed_from_milliseconds;
 };
