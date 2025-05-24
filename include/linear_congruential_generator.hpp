@@ -42,13 +42,13 @@ private:
 
 
     static uint64_t getMinimumValue(const std::uint64_t mask);
-    static uint64_t getMaximumValue(const uint64_t modulus, uint64_t mask);
+    static uint64_t getMaximumValue(const uint64_t modulus, const uint64_t mask);
 
 public:
     LinearCongruentialGenerator();
     LinearCongruentialGenerator(const uint64_t seed);
-    LinearCongruentialGenerator(uint64_t modulus, uint64_t multiplier, uint64_t increment, uint64_t mask);
-    LinearCongruentialGenerator(uint64_t seed, uint64_t modulus, uint64_t multiplier, uint64_t increment, uint64_t mask);
+    LinearCongruentialGenerator(const uint64_t modulus, const uint64_t multiplier, const uint64_t increment, const uint64_t mask);
+    LinearCongruentialGenerator(const uint64_t seed, const uint64_t modulus, const uint64_t multiplier, const uint64_t increment, const uint64_t mask);
 
     uint64_t generateRandomValue() override;
     double generateUnitNormalRandomValue() override;

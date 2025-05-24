@@ -35,9 +35,9 @@ TEST(TestLinearCongruentialGenerator, SeedAndCustomConstructor) {
 TEST(TestLinearCongruentialGenerator, GenerateUnitNormalRandomValueHasCorrectRange) {
     LinearCongruentialGenerator lcg = LinearCongruentialGenerator();
 
-    short enough_iterations_to_be_confident = 1000;
+    const short enough_iterations_to_be_confident = 1000;
     for (short i = 0; i < enough_iterations_to_be_confident; ++i) {
-        double value = lcg.generateUnitNormalRandomValue();
+        const double value = lcg.generateUnitNormalRandomValue();
         EXPECT_GE(value, 0.0);
         EXPECT_LE(value, 1.0);
     }
@@ -51,13 +51,13 @@ If this test ever fails it should be investigated further
 manually. */ 
 TEST(TestLinearCongruentialGenerator, GenerateUnitNormalRandomValueAverageConvergesToExpected) {
     LinearCongruentialGenerator lcg = LinearCongruentialGenerator();
-    double expected_average = 0.5;
+    const double expected_average = 0.5;
     double sum = 0.0;
-    short enough_iterations_to_be_confident = 10000;
+    const short enough_iterations_to_be_confident = 10000;
     for (short i = 0; i < enough_iterations_to_be_confident; ++i) {
         sum += lcg.generateUnitNormalRandomValue();
     }
-    double average = sum / enough_iterations_to_be_confident;
-    double confidence_interval = 1 / (enough_iterations_to_be_confident / 10);
+    const double average = sum / enough_iterations_to_be_confident;
+    const double confidence_interval = 1 / (enough_iterations_to_be_confident / 10);
     EXPECT_NEAR(average, expected_average, confidence_interval);
 }

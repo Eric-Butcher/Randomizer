@@ -34,9 +34,9 @@ TEST(TestXORShift, SeedAndConstantsConstructor) {
 TEST(TestXORShift, GenerateUnitNormalRandomValueHasCorrectRange) {
     XORShift xor_shift = XORShift();
 
-    short enough_iterations_to_be_confident = 1000;
+    const short enough_iterations_to_be_confident = 1000;
     for (short i = 0; i < enough_iterations_to_be_confident; ++i) {
-        double value = xor_shift.generateUnitNormalRandomValue();
+        const double value = xor_shift.generateUnitNormalRandomValue();
         EXPECT_GE(value, 0.0);
         EXPECT_LE(value, 1.0);
     }
@@ -50,13 +50,13 @@ If this test ever fails it should be investigated further
 manually. */ 
 TEST(TestXORShift, GenerateUnitNormalRandomValueAverageConvergesToExpected) {
     XORShift xor_shift = XORShift();
-    double expected_average = 0.5;
+    const double expected_average = 0.5;
     double sum = 0.0;
-    short enough_iterations_to_be_confident = 10000;
+    const short enough_iterations_to_be_confident = 10000;
     for (short i = 0; i < enough_iterations_to_be_confident; ++i) {
         sum += xor_shift.generateUnitNormalRandomValue();
     }
-    double average = sum / enough_iterations_to_be_confident;
-    double confidence_interval = 1 / (enough_iterations_to_be_confident / 10);
+    const double average = sum / enough_iterations_to_be_confident;
+    const double confidence_interval = 1 / (enough_iterations_to_be_confident / 10);
     EXPECT_NEAR(average, expected_average, confidence_interval);
 }

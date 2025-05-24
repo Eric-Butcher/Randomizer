@@ -23,7 +23,7 @@ LinearCongruentialGenerator::LinearCongruentialGenerator(const uint64_t seed)
       m_current_value(m_seed) {}
 
 // Constructor with custom parameters
-LinearCongruentialGenerator::LinearCongruentialGenerator(uint64_t modulus, uint64_t multiplier, uint64_t increment, uint64_t mask)
+LinearCongruentialGenerator::LinearCongruentialGenerator(const uint64_t modulus, const uint64_t multiplier, const uint64_t increment, const uint64_t mask)
     : PseudoRandomNumberGenerator(getMinimumValue(mask), getMaximumValue(modulus, mask)),
       m_modulus(modulus),
       m_multiplier(multiplier),
@@ -32,7 +32,7 @@ LinearCongruentialGenerator::LinearCongruentialGenerator(uint64_t modulus, uint6
       m_current_value(m_seed) {}
 
 // Constructor with seed and custom parameters
-LinearCongruentialGenerator::LinearCongruentialGenerator(uint64_t seed, uint64_t modulus, uint64_t multiplier, uint64_t increment, uint64_t mask)
+LinearCongruentialGenerator::LinearCongruentialGenerator(const uint64_t seed, const uint64_t modulus, const uint64_t multiplier, const uint64_t increment, const uint64_t mask)
     : PseudoRandomNumberGenerator(seed, getMinimumValue(mask), getMaximumValue(modulus, mask)),
       m_modulus(modulus),
       m_multiplier(multiplier),
@@ -55,7 +55,7 @@ uint64_t LinearCongruentialGenerator::getMinimumValue(const uint64_t mask) {
     return (1 << least_significant_bit_index) - 1;
 }
 
-uint64_t LinearCongruentialGenerator::getMaximumValue(const uint64_t modulus, uint64_t mask) {
+uint64_t LinearCongruentialGenerator::getMaximumValue(const uint64_t modulus, const uint64_t mask) {
     return std::min(modulus, mask);
 }
 
