@@ -1,3 +1,6 @@
+cmake_minimum_required(VERSION 3.22)
+
+
 # Download and unpack GoogleTest if not present
 include(FetchContent)
 FetchContent_Declare(
@@ -14,9 +17,8 @@ file(GLOB_RECURSE TEST_SOURCES "*.cpp")
 # Add test executable
 add_executable(RandomizerTests ${TEST_SOURCES})
 
-# Link to GoogleTest and your app sources
-target_include_directories(RandomizerTests PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(RandomizerTests gtest gtest_main)
+# Link to GoogleTest and the library for the randomizer code
+target_link_libraries(RandomizerTests PRIVATE gtest gtest_main randomizer_lib)
 
 include(GoogleTest)
 gtest_discover_tests(RandomizerTests)
