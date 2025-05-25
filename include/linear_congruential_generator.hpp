@@ -29,28 +29,28 @@ private:
         note = "[Online; accessed 10-May-2025]"
     } */
 
-    static constexpr std::uint64_t DefaultModulus = 0x7FFFFFFF;      
-    static constexpr std::uint64_t DefaultMultiplier = 1103515245;
-    static constexpr std::uint64_t DefaultIncrement = 12345;
-    static constexpr std::uint64_t DefaultMask = 0x7FFFFFFF;          // bits 0 through 30
+    static constexpr uint64_t DefaultModulus = 0x7FFFFFFF;      
+    static constexpr uint64_t DefaultMultiplier = 1103515245;
+    static constexpr uint64_t DefaultIncrement = 12345;
+    static constexpr uint64_t DefaultMask = 0x7FFFFFFF;          // bits 0 through 30
 
-    const std::uint64_t m_modulus;
-    const std::uint64_t m_multiplier;
-    const std::uint64_t m_increment;
-    const std::uint64_t m_mask;
-    std::uint64_t m_current_value = 0; 
+    const uint64_t m_modulus;
+    const uint64_t m_multiplier;
+    const uint64_t m_increment;
+    const uint64_t m_mask;
+    uint64_t m_current_value = 0; 
 
 
-    static std::uint64_t getMinimumValue(const std::uint64_t mask);
-    static std::uint64_t getMaximumValue(const std::uint64_t modulus, std::uint64_t mask);
+    static uint64_t getMinimumValue(const std::uint64_t mask);
+    static uint64_t getMaximumValue(const uint64_t modulus, const uint64_t mask);
 
 public:
     LinearCongruentialGenerator();
-    LinearCongruentialGenerator(const std::uint64_t seed);
-    LinearCongruentialGenerator(std::uint64_t modulus, std::uint64_t multiplier, std::uint64_t increment, std::uint64_t mask);
-    LinearCongruentialGenerator(std::uint64_t seed, std::uint64_t modulus, std::uint64_t multiplier, std::uint64_t increment, std::uint64_t mask);
+    LinearCongruentialGenerator(const uint64_t seed);
+    LinearCongruentialGenerator(const uint64_t modulus, const uint64_t multiplier, const uint64_t increment, const uint64_t mask);
+    LinearCongruentialGenerator(const uint64_t seed, const uint64_t modulus, const uint64_t multiplier, const uint64_t increment, const uint64_t mask);
 
-    std::uint64_t generateRandomValue() override;
+    uint64_t generateRandomValue() override;
     double generateUnitNormalRandomValue() override;
 };
 

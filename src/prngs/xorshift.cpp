@@ -11,14 +11,14 @@ XORShift::XORShift()
       m_c(DefaultC),
       m_current_value(m_seed) {}
 
-XORShift::XORShift(const std::uint64_t seed)
+XORShift::XORShift(const uint64_t seed)
     : PseudoRandomNumberGenerator(seed),
       m_a(DefaultA),
       m_b(DefaultB),
       m_c(DefaultC),
       m_current_value(m_seed) {}
 
-XORShift::XORShift(const std::uint64_t seed, const std::uint64_t a, const std::uint64_t b, const std::uint64_t c)
+XORShift::XORShift(const uint64_t seed, const uint64_t a, const uint64_t b, const uint64_t c)
     : PseudoRandomNumberGenerator(seed),
       m_a(a),
       m_b(b),
@@ -28,7 +28,7 @@ XORShift::XORShift(const std::uint64_t seed, const std::uint64_t a, const std::u
 
 
 // Generate a random value anywhere in the range of the XORShift algorithm
-std::uint64_t XORShift::generateRandomValue() {
+uint64_t XORShift::generateRandomValue() {
     // Compute the standard LCG formula for the next value
     m_current_value ^= (m_current_value << m_a);
     m_current_value ^= (m_current_value >> m_b);
@@ -40,9 +40,9 @@ std::uint64_t XORShift::generateRandomValue() {
 // Generate a random value normalized to the range [0, 1)
 double XORShift::generateUnitNormalRandomValue() {
   
-    std::uint64_t random_value = generateRandomValue();
+    uint64_t random_value = generateRandomValue();
 
-    std::uint64_t range = m_maximum_value - m_minimum_value;
+    uint64_t range = m_maximum_value - m_minimum_value;
     if (range == 0) {
         return 0.0; // Avoid division by zero
     }

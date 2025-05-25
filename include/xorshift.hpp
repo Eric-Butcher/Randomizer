@@ -17,23 +17,23 @@ private:
     
 
     // Default values from https://en.wikipedia.org/wiki/Xorshift
-    static constexpr std::uint64_t DefaultA = 13;      
-    static constexpr std::uint64_t DefaultB = 7;
-    static constexpr std::uint64_t DefaultC = 17;
+    static constexpr uint64_t DefaultA = 13;      
+    static constexpr uint64_t DefaultB = 7;
+    static constexpr uint64_t DefaultC = 17;
 
     // XORShift has 3 constants that are used for shifting
-    const std::uint64_t m_a;
-    const std::uint64_t m_b;
-    const std::uint64_t m_c;
-    std::uint64_t m_current_value = 0; 
+    const uint64_t m_a;
+    const uint64_t m_b;
+    const uint64_t m_c;
+    uint64_t m_current_value = 0; 
 
 public:
     XORShift();
-    XORShift(const std::uint64_t seed);
-    XORShift(const std::uint64_t seed, const std::uint64_t a, const std::uint64_t b, const std::uint64_t c);
+    XORShift(const uint64_t seed);
+    XORShift(const uint64_t seed, const uint64_t a, const uint64_t b, const uint64_t c);
 
 
-    std::uint64_t generateRandomValue() override;
+    uint64_t generateRandomValue() override;
     double generateUnitNormalRandomValue() override;
 };
 
