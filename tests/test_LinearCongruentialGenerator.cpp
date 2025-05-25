@@ -35,8 +35,8 @@ TEST(TestLinearCongruentialGenerator, SeedAndCustomConstructor) {
 TEST(TestLinearCongruentialGenerator, GenerateUnitNormalRandomValueHasCorrectRange) {
     LinearCongruentialGenerator lcg = LinearCongruentialGenerator();
 
-    const short enough_iterations_to_be_confident = 1000;
-    for (short i = 0; i < enough_iterations_to_be_confident; ++i) {
+    const int enough_iterations_to_be_confident = 10000;
+    for (int i = 0; i < enough_iterations_to_be_confident; ++i) {
         const double value = lcg.generateUnitNormalRandomValue();
         EXPECT_GE(value, 0.0);
         EXPECT_LE(value, 1.0);
