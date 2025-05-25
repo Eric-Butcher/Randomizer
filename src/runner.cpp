@@ -11,7 +11,7 @@
 
 void ProgramRunner::print_error() {
     std::cerr << program_name << ": bad usage\n"
-              << "Try 'randomizer --help' for more information.\n";
+              << "Try '" << program_name << " --help' for more information.\n";
 }
 
 void ProgramRunner::print_help() {
