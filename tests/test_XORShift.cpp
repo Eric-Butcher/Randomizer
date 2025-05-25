@@ -48,15 +48,15 @@ it is possible to fail even if everything is working
 properly, but it would be incredibly unlikely to fail. 
 If this test ever fails it should be investigated further 
 manually. */ 
-TEST(TestXORShift, GenerateUnitNormalRandomValueAverageConvergesToExpected) {
+TEST(TestXORShift, GenerateUnitNormalRandomValueEquidistributed) {
     XORShift xor_shift = XORShift();
     const double expected_average = 0.5;
     double sum = 0.0;
-    const short enough_iterations_to_be_confident = 10000;
-    for (short i = 0; i < enough_iterations_to_be_confident; ++i) {
+    const int enough_iterations_to_be_confident = 100000;
+    for (int i = 0; i < enough_iterations_to_be_confident; ++i) {
         sum += xor_shift.generateUnitNormalRandomValue();
     }
     const double average = sum / enough_iterations_to_be_confident;
-    const double confidence_interval = 1 / (enough_iterations_to_be_confident / 10);
+    const double confidence_interval = 0.01;
     EXPECT_NEAR(average, expected_average, confidence_interval);
 }
