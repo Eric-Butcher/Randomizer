@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${command:cmake.launchTargetPath}",
-            "args": [],
+            "args": ["--help", "--version", "this is another argument hope you can find it"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],

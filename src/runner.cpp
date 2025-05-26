@@ -141,7 +141,7 @@ void ProgramRunner::determine_count_configuration(const std::optional<std::strin
 }
 
 
-void ProgramRunner::determine_program_configuration(const ProgramRunner::RawArguments raw_args){
+void ProgramRunner::determine_program_configuration(const ProgramRunner::RawArguments &raw_args){
 
     determine_user_message_configuration(raw_args.error, raw_args.show_version, raw_args.show_help);
     auto &behave = this->behaviour;
