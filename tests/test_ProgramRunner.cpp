@@ -1,8 +1,26 @@
 #include <gtest/gtest.h>
 #include "program_runner.hpp"
 
-TEST(TestProgramRunner, NoArgs){
+struct ArgvBuilder {
+    std::vector<std::string> args;
+    std::vector<char*> argv;
 
+    ArgvBuilder(std::initializer_list<std::string> init) : args(init) {
+        std::string program_name = "randomizer";
+        argv.push_back(const_cast<char*>(program_name.c_str()));
+        for (auto& s : args) {
+            argv.push_back(const_cast<char*>(s.c_str()));
+        }
+        argv.push_back(nullptr); // argv must be null-terminated
+    }
+
+    int argc() const { return static_cast<int>(args.size()); }
+    char** argv_ptr() { return argv.data(); }
+};
+
+TEST(TestProgramRunner, NoArgs){
+    ArgvBuilder builder({});
+    ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
 }
 
 TEST(TestProgramRunner, JustHelp){
