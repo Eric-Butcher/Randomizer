@@ -9,12 +9,24 @@ class ProgramRunner {
 public:
     ProgramRunner(int argc, char **argv);
 
-    void iterate();
-    void iterate(std::uint64_t iterations);
-    void run();
+    struct ProgramStatus {
+        const std::optional<std::string> stderr_message;
+        const std::optional<std::string> stdout_message;
+        const std::optional<int> exit_code;
+    };
+
+    ProgramStatus iterate();
+
+    // will return the ProgramStatus of the last iteration
+    ProgramStatus iterate(uint64_t iterations);
+
+    // runs until the program runner finishes, will return the ProgramStatus of the last iteration
+    ProgramStatus run();
 
     const std::string version = "0.1";
     const std::string program_name = "randomizer";
+
+    
 
 private:
 
