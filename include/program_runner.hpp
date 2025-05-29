@@ -4,6 +4,8 @@
 #include <optional>
 #include <variant>
 #include <map>
+#include <memory>
+#include "prng.hpp"
 
 class ProgramRunner {   
 public:
@@ -105,6 +107,8 @@ private:
     std::optional<std::variant<int64_t, double>> min = std::nullopt;
     std::optional<std::variant<int64_t, double>> max = std::nullopt;
     std::optional<uint32_t> count = std::nullopt;
+
+    std::unique_ptr<PseudoRandomNumberGenerator> prng = nullptr;
 
 
 };
