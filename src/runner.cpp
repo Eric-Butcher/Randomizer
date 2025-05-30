@@ -333,3 +333,30 @@ ProgramRunner::ProgramStatus ProgramRunner::iterate() {
 
     return {std::nullopt, std::nullopt, ProgramRunner::ExitCodeError}; // Should never reach here
 }
+
+ProgramRunner::ProgramStatus ProgramRunner::iterate(uint64_t iterations) {
+    if (iterations == 0) {
+        throw std::invalid_argument("Number of iterations must be greater than zero");
+    }
+
+    ProgramStatus last_status;
+    for (uint64_t i = 0; i < iterations; ++i) {
+        last_status = iterate();
+        if (last_status.exit_code.has_value()) {
+            return last_status; // Return immediately if an exit code is present
+        }
+    }
+    return last_status; // Return the status of the last iteration
+}
+
+ProgramRunner::ProgramStatus ProgramRunner::run() {
+    while (!is_finished()) {
+        auto status = iterate();
+        if (status.exit_code.has_value()) {
+            return status; 
+        }
+    }
+    throw std::runtime_error("ProgramRunner has finished without returning an exit code. This should not happen.");
+}
+
+

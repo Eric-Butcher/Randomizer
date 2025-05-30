@@ -12,9 +12,9 @@ public:
     ProgramRunner(int argc, char **argv);
 
     struct ProgramStatus {
-        const std::optional<std::string> stdout_message;
-        const std::optional<std::string> stderr_message;
-        const std::optional<int> exit_code;
+        std::optional<std::string> stdout_message;
+        std::optional<std::string> stderr_message;
+        std::optional<int> exit_code;
     };
 
     ProgramStatus iterate();
