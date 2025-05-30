@@ -12,8 +12,8 @@ public:
     ProgramRunner(int argc, char **argv);
 
     struct ProgramStatus {
-        const std::optional<std::string> stderr_message;
         const std::optional<std::string> stdout_message;
+        const std::optional<std::string> stderr_message;
         const std::optional<int> exit_code;
     };
 
@@ -24,6 +24,8 @@ public:
 
     // runs until the program runner finishes, will return the ProgramStatus of the last iteration
     ProgramStatus run();
+
+    bool is_finished();
 
     const std::string version = "0.1";
     const std::string program_name = "randomizer";
@@ -97,18 +99,27 @@ private:
     void determine_generation_type_configuration(const std::optional<std::string> &generation_type);
     void determine_count_configuration(const std::optional<std::string> &count_str);
     void determine_algorithm_configuration(const std::optional<std::string> &alg_str);
+    void create_prng();
 
-    void print_error();
-    void print_help();
-    void print_version();
+    std::string error_string();
+    std::string help_string();
+    std::string version_string();
 
     std::optional<ProgramBehaviour> behaviour = std::nullopt;
     std::optional<Algorithm> algorithm = std::nullopt;
-    std::optional<std::variant<int64_t, double>> min = std::nullopt;
-    std::optional<std::variant<int64_t, double>> max = std::nullopt;
+    std::optional<std::variant<int32_t, float>> min = std::nullopt;
+    std::optional<std::variant<int32_t, float>> max = std::nullopt;
     std::optional<uint32_t> count = std::nullopt;
 
+    uint32_t iteration = 0;
+    bool finished = false;
+
     std::unique_ptr<PseudoRandomNumberGenerator> prng = nullptr;
+
+    // Exit codes
+    static constexpr int ExitCodeSuccess = 0;
+    static constexpr int ExitCodeError = 1;
+
 
 
 };
