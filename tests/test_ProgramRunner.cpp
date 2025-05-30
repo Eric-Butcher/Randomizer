@@ -1,6 +1,11 @@
 #include <gtest/gtest.h>
 #include "program_runner.hpp"
 
+constexpr char* highest_i32_plus_one = "2147483648";
+constexpr char* lowest_i32_minus_one = "-2147483649";
+constexpr char* highest_float_plus_more = "3.402823467e+38";
+constexpr char* lowest_float_minus_more = "-3.402823467e+38";
+
 struct ArgvBuilder {
     std::vector<std::string> args;
     std::vector<char*> argv;
@@ -98,7 +103,7 @@ TEST(TestProgramRunner, BadSubcommands){
 }
 
 TEST(TestProgramRunner, DefaultAlgorithm){
-    ArgvBuilder builder({"--min", "0", "--max=10", "-c", "5", "--type", "unit"});
+    ArgvBuilder builder({"--min", "0", "--max=10", "-c", "5", "--type", "int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     EXPECT_FALSE(status.stderr_message.has_value());
@@ -108,7 +113,7 @@ TEST(TestProgramRunner, DefaultAlgorithm){
 }
 
 TEST(TestProgramRunner, ExplicitAlgorithmXOR){
-    ArgvBuilder builder({"--algorithm", "xor", "-m", "0", "-M=10", "--count", "5", "-t", "unit"});
+    ArgvBuilder builder({"--algorithm", "xor", "-m", "0", "-M=10", "--count", "5", "-t", "int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     EXPECT_FALSE(status.stderr_message.has_value());
@@ -118,7 +123,7 @@ TEST(TestProgramRunner, ExplicitAlgorithmXOR){
 }
 
 TEST(TestProgramRunner, ExplicitAlgorithmLCG){
-    ArgvBuilder builder({"--algorithm=linear-congruential-generator", "-m=0", "-M", "10", "--count=5", "-t=unit"});
+    ArgvBuilder builder({"--algorithm=linear-congruential-generator", "-m=0", "-M", "10", "--count=5", "-t=int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     EXPECT_FALSE(status.stderr_message.has_value());
@@ -128,7 +133,7 @@ TEST(TestProgramRunner, ExplicitAlgorithmLCG){
 }
 
 TEST(TestProgramRunner, ExplicitAlgorithmMersenne){
-    ArgvBuilder builder({"-a", "mersenne", "-m=0", "-M", "10", "--count=5", "--type=unit"});
+    ArgvBuilder builder({"-a", "mersenne", "-m=0", "-M", "10", "--count=5", "--type=int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     EXPECT_FALSE(status.stderr_message.has_value());
@@ -138,7 +143,7 @@ TEST(TestProgramRunner, ExplicitAlgorithmMersenne){
 }
 
 TEST(TestProgramRunner, ExplicitAlgorithmInvalid){
-    ArgvBuilder builder({"--algorithm", "invalid-algorithm", "-m", "0", "-M=10", "--count", "5", "-t", "unit"});
+    ArgvBuilder builder({"--algorithm", "invalid-algorithm", "-m", "0", "-M=10", "--count", "5", "-t", "int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     EXPECT_TRUE(status.stderr_message.has_value());
@@ -148,7 +153,7 @@ TEST(TestProgramRunner, ExplicitAlgorithmInvalid){
 }
 
 TEST(TestProgramRunner, NoMinOrMax){
-    ArgvBuilder builder({"--count", "5", "--type", "unit"});
+    ArgvBuilder builder({"--count", "5", "--type", "int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     EXPECT_TRUE(status.stderr_message.has_value());
@@ -158,7 +163,7 @@ TEST(TestProgramRunner, NoMinOrMax){
 }
 
 TEST(TestProgramRunner, MinNoMax){
-    ArgvBuilder builder({"--min", "0", "--count", "5", "--type", "unit"});
+    ArgvBuilder builder({"--min", "0", "--count", "5", "--type", "int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     EXPECT_TRUE(status.stderr_message.has_value());
@@ -168,7 +173,7 @@ TEST(TestProgramRunner, MinNoMax){
 }
 
 TEST(TestProgramRunner, MaxNoMin){
-    ArgvBuilder builder({"-M", "10", "--count", "5", "--type", "unit"});
+    ArgvBuilder builder({"-M", "11.1", "--count", "5", "--type", "float"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     EXPECT_TRUE(status.stderr_message.has_value());
@@ -178,7 +183,7 @@ TEST(TestProgramRunner, MaxNoMin){
 }
 
 TEST(TestProgramRunner, MinAndMax){
-    ArgvBuilder builder({"--min", "0", "--max", "6", "--count", "5", "--type", "unit"});
+    ArgvBuilder builder({"--min", "0", "--max", "6", "--count", "5", "--type", "int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     EXPECT_FALSE(status.stderr_message.has_value());
@@ -188,8 +193,7 @@ TEST(TestProgramRunner, MinAndMax){
 }
 
 TEST(TestProgramRunner, MinExcessiveNegativeMagnitude){
-    constexpr char* lowest_64_bit_signed_minus_one =  "-9223372036854775809";
-    ArgvBuilder builder({"--min", lowest_64_bit_signed_minus_one, "--max", "10", "--count", "5", "--type", "unit"});
+    ArgvBuilder builder({"--min", lowest_i32_minus_one, "--max", "10", "--count", "5", "--type", "int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     EXPECT_TRUE(status.stderr_message.has_value());
@@ -199,8 +203,7 @@ TEST(TestProgramRunner, MinExcessiveNegativeMagnitude){
 }
 
 TEST(TestProgramRunner, MinExcessivePositiveMagnitude){
-    constexpr char* highest_64_bit_signed_plus_one = "9223372036854775808";
-    ArgvBuilder builder({"--min", highest_64_bit_signed_plus_one, "--max", "10", "--count", "5", "--type", "unit"});
+    ArgvBuilder builder({"--min", highest_i32_plus_one, "--max", "10", "--count", "5", "--type", "int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     EXPECT_TRUE(status.stderr_message.has_value());
@@ -210,8 +213,7 @@ TEST(TestProgramRunner, MinExcessivePositiveMagnitude){
 }
 
 TEST(TestProgramRunner, MinAndMaxExcessiveNegativeMagnitude){
-    constexpr char* lowest_64_bit_signed_minus_one =  "-9223372036854775809";
-    ArgvBuilder builder({"--min", lowest_64_bit_signed_minus_one, "--max", lowest_64_bit_signed_minus_one, "--count", "5", "--type", "unit"});
+    ArgvBuilder builder({"--min", lowest_i32_minus_one, "--max", lowest_i32_minus_one, "--count", "5", "--type", "int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     EXPECT_TRUE(status.stderr_message.has_value());
@@ -221,8 +223,7 @@ TEST(TestProgramRunner, MinAndMaxExcessiveNegativeMagnitude){
 }
 
 TEST(TestProgramRunner, MinAndMaxExcessivePositiveMagnitude){
-    constexpr char* highest_64_bit_signed_plus_one = "9223372036854775808";
-    ArgvBuilder builder({"--min", highest_64_bit_signed_plus_one, "--max", highest_64_bit_signed_plus_one, "--count", "5", "--type", "unit"});
+    ArgvBuilder builder({"--min", highest_i32_plus_one, "--max", highest_i32_plus_one, "--count", "5", "--type", "int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     EXPECT_TRUE(status.stderr_message.has_value());
@@ -291,8 +292,7 @@ TEST(TestProgramRunner, CountIsNegative){
 }
 
 TEST(TestProgramRunner, CountExcessivePositiveMagnitude){
-    constexpr char* highest_64_bit_signed_plus_one = "9223372036854775808";
-    ArgvBuilder builder({"--min", "0", "--max", "10", "--count", highest_64_bit_signed_plus_one, "--type", "unit"});
+    ArgvBuilder builder({"--min", "0", "--max", "10", "--count", highest_i32_plus_one, "--type", "int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.iterate();
     EXPECT_TRUE(status.stderr_message.has_value());
@@ -302,7 +302,7 @@ TEST(TestProgramRunner, CountExcessivePositiveMagnitude){
 }
 
 TEST(TestProgramRunner, DefaultType){
-    ArgvBuilder builder({"--min", "0", "--max", "10", "--count", "5", "--algorithm", "xorshift"});
+    ArgvBuilder builder({"--count", "5", "--algorithm", "xorshift"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     EXPECT_FALSE(status.stderr_message.has_value());
@@ -312,7 +312,7 @@ TEST(TestProgramRunner, DefaultType){
 }
 
 TEST(TestProgramRunner, ExplicitTypeUnit){
-    ArgvBuilder builder({"--min", "0", "--max", "10", "--count", "5", "--type", "unit"});
+    ArgvBuilder builder({"--count", "5", "--type", "unit"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     EXPECT_FALSE(status.stderr_message.has_value());
@@ -322,7 +322,7 @@ TEST(TestProgramRunner, ExplicitTypeUnit){
 }
 
 TEST(TestProgramRunner, ExplicitTypeFloat){
-    ArgvBuilder builder({"--min", "0", "--max", "10", "--count", "5", "--type", "float"});
+    ArgvBuilder builder({"--min", "-4.3", "--max", "10.5", "--count", "5", "--type", "float"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     EXPECT_FALSE(status.stderr_message.has_value());
