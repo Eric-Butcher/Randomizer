@@ -7,5 +7,6 @@
 
 int main(int argc, char *argv[]){
     ProgramRunner runner = ProgramRunner(argc, argv);
+    ProgramRunner::ProgramStatus status = runner.run();
     return 0;
 }

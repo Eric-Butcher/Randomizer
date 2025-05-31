@@ -177,7 +177,7 @@ void ProgramRunner::determine_program_configuration(const ProgramRunner::RawArgu
 }
 
 ProgramRunner::RawArguments ProgramRunner::parse_args(int argc, char **argv) {
-    const char* const short_opts = "hva:m:M:c:t:";
+    const char* const short_opts = "+hva:m:M:c:t:";
     const ::option long_opts[] = {
         {"help", no_argument, nullptr, 'h'},
         {"version", no_argument, nullptr, 'v'},
@@ -241,6 +241,11 @@ ProgramRunner::RawArguments ProgramRunner::parse_args(int argc, char **argv) {
 }
 
 void ProgramRunner::create_prng() {
+
+    if (!this->algorithm.has_value()) {
+        return;
+    }
+
     switch (this->algorithm.value()) {
         case ProgramRunner::Algorithm::XORShift:
             this->prng = std::make_unique<XORShift>();
@@ -271,9 +276,7 @@ bool ProgramRunner::is_finished() {
     } else if ((this->count.has_value()) && (this->iteration >= this->count)) {
         this->finished = true;
         return true;
-    } else if (!this->count.has_value() || this->count.value() == 0) {
-        throw std::runtime_error("ProgramRunner is not configured properly, count is not set or is zero");
-    }
+    } 
 
     return false;
 }
@@ -284,7 +287,7 @@ ProgramRunner::ProgramStatus ProgramRunner::iterate() {
         throw std::runtime_error("ProgramRunner has finished, cannot iterate further");
     }
 
-    if (!this->behaviour.has_value() || !this->count.has_value() || !this->prng) {
+    if (!this->behaviour.has_value()) {
         throw std::runtime_error("ProgramRunner not configured properly");
     }
 
@@ -303,13 +306,14 @@ ProgramRunner::ProgramStatus ProgramRunner::iterate() {
             this->finished = true;
             return {version_string(), std::nullopt, ProgramRunner::ExitCodeSuccess};
 
-        case ProgramBehaviour::GenerateUnitNormal:
+        case ProgramBehaviour::GenerateUnitNormal: {
             this->iteration++;
             double random_value = this->prng->generateUnitNormalRandomValue();
             auto exit_code_based_on_count = is_finished() ? std::optional<int>(ProgramRunner::ExitCodeSuccess) : std::nullopt;
             return {std::to_string(random_value), std::nullopt, exit_code_based_on_count};
+        }
             
-        case ProgramBehaviour::GenerateFloating:
+        case ProgramBehaviour::GenerateFloating: {
             this->iteration++;
             float random_float = this->prng->generateFloatingPointRandomValue(
                 std::get<float>(this->min.value_or(0.0f)),
@@ -317,8 +321,9 @@ ProgramRunner::ProgramStatus ProgramRunner::iterate() {
             );
             auto exit_code_based_on_count = is_finished() ? std::optional<int>(ProgramRunner::ExitCodeSuccess) : std::nullopt;
             return {std::to_string(random_float), std::nullopt, exit_code_based_on_count};
+        }
 
-        case ProgramBehaviour::GenerateInteger:
+        case ProgramBehaviour::GenerateInteger: {
             this->iteration++;
             int32_t random_int = this->prng->generateIntegerRandomValue(
                 std::get<int32_t>(this->min.value_or(0)),
@@ -326,6 +331,7 @@ ProgramRunner::ProgramStatus ProgramRunner::iterate() {
             );
             auto exit_code_based_on_count = is_finished() ? std::optional<int>(ProgramRunner::ExitCodeSuccess) : std::nullopt;
             return {std::to_string(random_int), std::nullopt, exit_code_based_on_count};
+        }
 
         default:
             throw std::runtime_error("ProgramRunner not configured properly, behaviour is not set");
