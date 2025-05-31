@@ -185,7 +185,7 @@ ProgramRunner::RawArguments ProgramRunner::parse_args(int argc, char **argv) {
         {"min", required_argument, nullptr, 'm'},
         {"max", required_argument, nullptr, 'M'},
         {"count", required_argument, nullptr, 'c'},
-        {"type", no_argument, nullptr, 't'},
+        {"type", required_argument, nullptr, 't'},
         {nullptr, 0, nullptr, 0}
     };
 

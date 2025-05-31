@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${command:cmake.launchTargetPath}",
-            "args": ["badsubcommand", "--help"],
+            "args": ["--min", "0", "--max=10", "-c", "5", "--type", "int"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
