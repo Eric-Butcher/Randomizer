@@ -115,7 +115,7 @@ TEST(TestProgramRunner, DefaultAlgorithm){
 }
 
 TEST(TestProgramRunner, ExplicitAlgorithmXOR){
-    ArgvBuilder builder({"--algorithm", "xor", "-m", "0", "-M=10", "--count", "5", "-t", "int"});
+    ArgvBuilder builder({"--algorithm", "xor", "-m", "0", "-M10", "--count", "5", "-t", "int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     ASSERT_FALSE(status.stderr_message.has_value());
@@ -125,7 +125,7 @@ TEST(TestProgramRunner, ExplicitAlgorithmXOR){
 }
 
 TEST(TestProgramRunner, ExplicitAlgorithmLCG){
-    ArgvBuilder builder({"--algorithm=linear-congruential-generator", "-m=0", "-M", "10", "--count=5", "-t=int"});
+    ArgvBuilder builder({"--algorithm=linear-congruential-generator", "-m0", "-M", "10", "--count=5", "-tint"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     ASSERT_FALSE(status.stderr_message.has_value());
@@ -135,7 +135,7 @@ TEST(TestProgramRunner, ExplicitAlgorithmLCG){
 }
 
 TEST(TestProgramRunner, ExplicitAlgorithmMersenne){
-    ArgvBuilder builder({"-a", "mersenne", "-m=0", "-M", "10", "--count=5", "--type=int"});
+    ArgvBuilder builder({"-a", "mersenne", "-m", "0", "-M", "10", "--count=5", "--type=int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     ASSERT_FALSE(status.stderr_message.has_value());
@@ -145,7 +145,7 @@ TEST(TestProgramRunner, ExplicitAlgorithmMersenne){
 }
 
 TEST(TestProgramRunner, ExplicitAlgorithmInvalid){
-    ArgvBuilder builder({"--algorithm", "invalid-algorithm", "-m", "0", "-M=10", "--count", "5", "-t", "int"});
+    ArgvBuilder builder({"--algorithm", "invalid-algorithm", "--min", "0", "-M" "10", "--count", "5", "-t", "int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     ASSERT_TRUE(status.stderr_message.has_value());
