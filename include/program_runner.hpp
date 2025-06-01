@@ -27,8 +27,12 @@ public:
 
     bool is_finished();
 
+    void warmup(uint64_t iterations = 1000);
+
     const std::string version = "0.1";
     const std::string program_name = "randomizer";
+
+
 
     
 
