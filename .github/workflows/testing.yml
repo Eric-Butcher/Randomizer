@@ -1,4 +1,4 @@
-name: CMake & CTest
+name: CTest
 
 on:
   push:
