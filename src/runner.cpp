@@ -27,7 +27,7 @@ std::string ProgramRunner::help_string() {
               + "  -m, --min            Minimum value\n"
               + "  -M, --max            Maximum value\n"
               + "  -c, --count          Number of random numbers to generate (default: 1)\n"
-              + "  -t, --type           Specify the type to output (default: unit)\n";
+              + "  -t, --type           Specify the type to output (default: int)\n";
     return help_string;
 }   
 
@@ -114,7 +114,7 @@ void ProgramRunner::determine_algorithm_configuration(const std::optional<std::s
 
 void ProgramRunner::determine_generation_type_configuration(const std::optional<std::string> &generation_type){
     if (!generation_type.has_value()){
-        this->behaviour = ProgramBehaviour::GenerateInteger;
+        this->behaviour = DefaultGenerationType;
     } else if (generation_types.contains(generation_type.value())){
         this->behaviour = generation_types.at(generation_type.value());
     } else {

@@ -305,7 +305,7 @@ TEST(TestProgramRunner, CountExcessivePositiveMagnitude){
 }
 
 TEST(TestProgramRunner, DefaultType){
-    ArgvBuilder builder({"--count", "5", "--algorithm", "xorshift"});
+    ArgvBuilder builder({"-m0", "-M1", "--count", "5", "--algorithm", "xorshift"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     ASSERT_FALSE(status.stderr_message.has_value());

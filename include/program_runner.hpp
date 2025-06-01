@@ -91,6 +91,7 @@ private:
     // Defaults
 
     static constexpr uint32_t DefaultCount = 1;
+    static constexpr ProgramBehaviour DefaultGenerationType = ProgramBehaviour::GenerateInteger;
 
     RawArguments parse_args(int argc, char **argv);
     void determine_program_configuration(const RawArguments &raw_arguments);
