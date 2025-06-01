@@ -7,6 +7,7 @@
 
 int main(int argc, char *argv[]){
     ProgramRunner runner = ProgramRunner(argc, argv);
+    runner.warmup();
     ProgramRunner::ProgramStatus status;
     while (!runner.is_finished()) {
         status = runner.iterate();
