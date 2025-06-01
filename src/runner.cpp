@@ -353,4 +353,10 @@ ProgramRunner::ProgramStatus ProgramRunner::run() {
     throw std::runtime_error("ProgramRunner has finished without returning an exit code. This should not happen.");
 }
 
+void ProgramRunner::warmup(uint64_t iterations) {
+    for (uint64_t i = 0; i < iterations; ++i) {
+        this->prng->generateRandomValue(); // Warmup the PRNG
+    }
+}
+
 
