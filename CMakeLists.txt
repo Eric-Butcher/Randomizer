@@ -25,5 +25,26 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} PRIVATE randomizer_lib)
 
 
+# Add compiler warnings only for GCC and Clang
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(randomizer_lib PRIVATE
+        -Wall
+        -Wextra
+        -Wshadow
+        -Wconversion
+        -Wpedantic
+        -Werror
+    )
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        -Wall
+        -Wextra
+        -Wshadow
+        -Wconversion
+        -Wpedantic
+        -Werror
+    )
+endif()
+
+
 enable_testing()
 add_subdirectory(tests)

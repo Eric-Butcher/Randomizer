@@ -20,5 +20,16 @@ add_executable(RandomizerTests ${TEST_SOURCES})
 # Link to GoogleTest and the library for the randomizer code
 target_link_libraries(RandomizerTests PRIVATE gtest gtest_main randomizer_lib)
 
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(RandomizerTests PRIVATE
+        -Wall
+        -Wextra
+        -Wshadow
+        -Wconversion
+        -Wpedantic
+        -Werror
+    )
+endif()
+
 include(GoogleTest)
 gtest_discover_tests(RandomizerTests)
