@@ -36,18 +36,6 @@ std::string ProgramRunner::version_string() {
     return version_string;
 }
 
-
-// Parses a string to uint32_t, returns std::nullopt on error or out-of-range
-std::optional<uint32_t> parse_count_value(const std::string &count_str) {
-    uint32_t value;
-    const auto [ptr, ec] = std::from_chars(count_str.data(), count_str.data() + count_str.size(), value);
-    if (ec != std::errc() || ptr != count_str.data() + count_str.size()) {
-        return std::nullopt; // Parsing failed or extra characters present
-    }
-    return value;
-}
-
-
 template <typename T>
 concept FromCharsParsable = std::is_integral_v<T> || std::is_floating_point_v<T>;
 
@@ -136,8 +124,8 @@ void ProgramRunner::determine_generation_type_configuration(const std::optional<
 
 void ProgramRunner::determine_count_configuration(const std::optional<std::string> &count_str){
     if (count_str.has_value()){
-        std::optional<uint32_t> count_val = parse_count_value(count_str.value());
-        if (!count_val.has_value()){
+        std::optional<uint32_t> count_val = parse_value<uint32_t>(count_str.value());
+        if (!count_val.has_value() || count_val.value() <= 0){
             this->behaviour = ProgramBehaviour::Error;
             return;
         }
