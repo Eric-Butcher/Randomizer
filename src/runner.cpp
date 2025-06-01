@@ -7,40 +7,34 @@
 #include <string>
 #include <cstdint>
 #include "program_runner.hpp"
+#include "prng.hpp"
+#include "xorshift.hpp"
+#include "linear_congruential_generator.hpp"
 
 
-void ProgramRunner::print_error() {
-    std::cerr << program_name << ": bad usage\n"
-              << "Try 'randomizer --help' for more information.\n";
+std::string ProgramRunner::error_string() {
+    std::string error_string =  program_name + ": bad usage\n"
+              + "Try '" + program_name + " --help' for more information.\n";
+    return error_string;
 }
 
-void ProgramRunner::print_help() {
-    std::cout << "Usage: " << program_name << " [options]\n"
-              << "Options:\n"
-              << "  -h, --help           Show this help message\n"
-              << "  -v, --version        Show version information\n"
-              << "  -a, --algorithm      Specify the algorithm (default: xorshift)\n"
-              << "  -m, --min            Minimum value\n"
-              << "  -M, --max            Maximum value\n"
-              << "  -c, --count          Number of random numbers to generate (default: 1)\n"
-              << "  -t, --type           Specify the type to output (default: unit)\n";
+std::string ProgramRunner::help_string() {
+    std::string help_string = "Usage: " + program_name + " [options]\n"
+              + "Options:\n"
+              + "  -h, --help           Show this help message\n"
+              + "  -v, --version        Show version information\n"
+              + "  -a, --algorithm      Specify the algorithm (default: xorshift)\n"
+              + "  -m, --min            Minimum value\n"
+              + "  -M, --max            Maximum value\n"
+              + "  -c, --count          Number of random numbers to generate (default: 1)\n"
+              + "  -t, --type           Specify the type to output (default: int)\n";
+    return help_string;
 }   
 
-void ProgramRunner::print_version() {
-    std::cout << program_name << " " << version << "\n";
+std::string ProgramRunner::version_string() {
+    std::string version_string = program_name + " " + version + "\n";
+    return version_string;
 }
-
-
-// Parses a string to uint32_t, returns std::nullopt on error or out-of-range
-std::optional<uint32_t> parse_count_value(const std::string &count_str) {
-    uint32_t value;
-    const auto [ptr, ec] = std::from_chars(count_str.data(), count_str.data() + count_str.size(), value);
-    if (ec != std::errc() || ptr != count_str.data() + count_str.size()) {
-        return std::nullopt; // Parsing failed or extra characters present
-    }
-    return value;
-}
-
 
 template <typename T>
 concept FromCharsParsable = std::is_integral_v<T> || std::is_floating_point_v<T>;
@@ -57,6 +51,7 @@ std::optional<T> parse_value(const std::string& str) {
     return value;
 }
 
+
 template <FromCharsParsable T>
 std::optional<std::pair<T, T>> parse_min_and_max_numbers(const std::string &min_str, const std::string &max_str) {
     std::optional<T> min_value = parse_value<T>(min_str);
@@ -71,7 +66,7 @@ void ProgramRunner::determine_generation_range_configuration(const std::optional
     bool both_max_and_min_specified = min_str.has_value() && max_str.has_value();
     bool neither_max_or_min_specified = !min_str.has_value() && !max_str.has_value();
     if (both_max_and_min_specified && this->behaviour == ProgramBehaviour::GenerateInteger){
-        auto min_and_max = parse_min_and_max_numbers<int64_t>(min_str.value(), max_str.value());
+        auto min_and_max = parse_min_and_max_numbers<int32_t>(min_str.value(), max_str.value());
         if (!min_and_max.has_value()){
             this->behaviour = ProgramBehaviour::Error;
             return;
@@ -79,7 +74,7 @@ void ProgramRunner::determine_generation_range_configuration(const std::optional
         this->min = min_and_max.value().first;
         this->max = min_and_max.value().second;
     } else if (both_max_and_min_specified && this->behaviour == ProgramBehaviour::GenerateFloating){
-        auto min_and_max = parse_min_and_max_numbers<double>(min_str.value(), max_str.value());
+        auto min_and_max = parse_min_and_max_numbers<float>(min_str.value(), max_str.value());
         if (!min_and_max.has_value()){
             this->behaviour = ProgramBehaviour::Error;
             return;
@@ -119,7 +114,7 @@ void ProgramRunner::determine_algorithm_configuration(const std::optional<std::s
 
 void ProgramRunner::determine_generation_type_configuration(const std::optional<std::string> &generation_type){
     if (!generation_type.has_value()){
-        this->behaviour = ProgramBehaviour::GenerateInteger;
+        this->behaviour = DefaultGenerationType;
     } else if (generation_types.contains(generation_type.value())){
         this->behaviour = generation_types.at(generation_type.value());
     } else {
@@ -129,8 +124,8 @@ void ProgramRunner::determine_generation_type_configuration(const std::optional<
 
 void ProgramRunner::determine_count_configuration(const std::optional<std::string> &count_str){
     if (count_str.has_value()){
-        std::optional<uint32_t> count_val = parse_count_value(count_str.value());
-        if (!count_val.has_value()){
+        std::optional<uint32_t> count_val = parse_value<uint32_t>(count_str.value());
+        if (!count_val.has_value() || count_val.value() <= 0){
             this->behaviour = ProgramBehaviour::Error;
             return;
         }
@@ -141,7 +136,7 @@ void ProgramRunner::determine_count_configuration(const std::optional<std::strin
 }
 
 
-void ProgramRunner::determine_program_configuration(const ProgramRunner::RawArguments raw_args){
+void ProgramRunner::determine_program_configuration(const ProgramRunner::RawArguments &raw_args){
 
     determine_user_message_configuration(raw_args.error, raw_args.show_version, raw_args.show_help);
     auto &behave = this->behaviour;
@@ -170,7 +165,7 @@ void ProgramRunner::determine_program_configuration(const ProgramRunner::RawArgu
 }
 
 ProgramRunner::RawArguments ProgramRunner::parse_args(int argc, char **argv) {
-    const char* const short_opts = "hva:m:M:c:t:";
+    const char* const short_opts = "+hva:m:M:c:t:";
     const ::option long_opts[] = {
         {"help", no_argument, nullptr, 'h'},
         {"version", no_argument, nullptr, 'v'},
@@ -178,7 +173,7 @@ ProgramRunner::RawArguments ProgramRunner::parse_args(int argc, char **argv) {
         {"min", required_argument, nullptr, 'm'},
         {"max", required_argument, nullptr, 'M'},
         {"count", required_argument, nullptr, 'c'},
-        {"type", no_argument, nullptr, 't'},
+        {"type", required_argument, nullptr, 't'},
         {nullptr, 0, nullptr, 0}
     };
 
@@ -233,22 +228,129 @@ ProgramRunner::RawArguments ProgramRunner::parse_args(int argc, char **argv) {
     return raw_arguments;
 }
 
+void ProgramRunner::create_prng() {
+
+    if (!this->algorithm.has_value()) {
+        return;
+    }
+
+    switch (this->algorithm.value()) {
+        case ProgramRunner::Algorithm::XORShift:
+            this->prng = std::make_unique<XORShift>();
+            break;
+        case ProgramRunner::Algorithm::LinearCongruentialGenerator:
+            this->prng = std::make_unique<LinearCongruentialGenerator>();
+            break;
+        default:
+            throw std::runtime_error("Unsupported algorithm");
+    }
+
+    if (this->prng == nullptr) {
+        throw std::runtime_error("Failed to create PseudoRandomNumberGenerator instance");
+    }
+
+    return;
+}
+
 ProgramRunner::ProgramRunner(int argc, char **argv){
     RawArguments raw_arguments = parse_args(argc, argv);
     determine_program_configuration(raw_arguments);
-    
-    if (this->behaviour.value() == ProgramBehaviour::Error){
-        print_error();
-        exit(1);
-    } else if (this->behaviour.value() == ProgramBehaviour::Help){
-        print_help();
-        exit(0);
-    } else if (this->behaviour.value() == ProgramBehaviour::Version){
-        print_version();
-        exit(0);
-    } else {
-        std::cout << "You got to another type of state!" << std::endl;
-        exit(0);
+    create_prng();
+}
+
+bool ProgramRunner::is_finished() {
+    if (this->finished) {
+        return true;
+    } else if ((this->count.has_value()) && (this->iteration >= this->count)) {
+        this->finished = true;
+        return true;
+    } 
+
+    return false;
+}
+
+ProgramRunner::ProgramStatus ProgramRunner::iterate() {
+
+    if (is_finished()) {
+        throw std::runtime_error("ProgramRunner has finished, cannot iterate further");
     }
 
+    if (!this->behaviour.has_value()) {
+        throw std::runtime_error("ProgramRunner not configured properly");
+    }
+
+
+    switch (this->behaviour.value()) {
+
+        case ProgramBehaviour::Error:
+            this->finished = true;
+            return {std::nullopt, error_string(), ProgramRunner::ExitCodeError};
+
+        case ProgramBehaviour::Help:
+            this->finished = true;
+            return {help_string(), std::nullopt, ProgramRunner::ExitCodeSuccess};
+
+        case ProgramBehaviour::Version:
+            this->finished = true;
+            return {version_string(), std::nullopt, ProgramRunner::ExitCodeSuccess};
+
+        case ProgramBehaviour::GenerateUnitNormal: {
+            this->iteration++;
+            double random_value = this->prng->generateUnitNormalRandomValue();
+            auto exit_code_based_on_count = is_finished() ? std::optional<int>(ProgramRunner::ExitCodeSuccess) : std::nullopt;
+            return {std::to_string(random_value), std::nullopt, exit_code_based_on_count};
+        }
+            
+        case ProgramBehaviour::GenerateFloating: {
+            this->iteration++;
+            float random_float = this->prng->generateFloatingPointRandomValue(
+                std::get<float>(this->min.value_or(0.0f)),
+                std::get<float>(this->max.value_or(1.0f))
+            );
+            auto exit_code_based_on_count = is_finished() ? std::optional<int>(ProgramRunner::ExitCodeSuccess) : std::nullopt;
+            return {std::to_string(random_float), std::nullopt, exit_code_based_on_count};
+        }
+
+        case ProgramBehaviour::GenerateInteger: {
+            this->iteration++;
+            int32_t random_int = this->prng->generateIntegerRandomValue(
+                std::get<int32_t>(this->min.value_or(0)),
+                std::get<int32_t>(this->max.value_or(1))
+            );
+            auto exit_code_based_on_count = is_finished() ? std::optional<int>(ProgramRunner::ExitCodeSuccess) : std::nullopt;
+            return {std::to_string(random_int), std::nullopt, exit_code_based_on_count};
+        }
+
+        default:
+            throw std::runtime_error("ProgramRunner not configured properly, behaviour is not set");
+    }
+
+    return {std::nullopt, std::nullopt, ProgramRunner::ExitCodeError}; // Should never reach here
 }
+
+ProgramRunner::ProgramStatus ProgramRunner::iterate(uint64_t iterations) {
+    if (iterations == 0) {
+        throw std::invalid_argument("Number of iterations must be greater than zero");
+    }
+
+    ProgramStatus last_status;
+    for (uint64_t i = 0; i < iterations; ++i) {
+        last_status = iterate();
+        if (last_status.exit_code.has_value()) {
+            return last_status; // Return immediately if an exit code is present
+        }
+    }
+    return last_status; // Return the status of the last iteration
+}
+
+ProgramRunner::ProgramStatus ProgramRunner::run() {
+    while (!is_finished()) {
+        auto status = iterate();
+        if (status.exit_code.has_value()) {
+            return status; 
+        }
+    }
+    throw std::runtime_error("ProgramRunner has finished without returning an exit code. This should not happen.");
+}
+
+

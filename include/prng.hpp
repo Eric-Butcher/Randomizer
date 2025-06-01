@@ -21,6 +21,8 @@ class PseudoRandomNumberGenerator
 
         virtual uint64_t generateRandomValue() = 0;
         virtual double generateUnitNormalRandomValue() = 0;
+        double generateFloatingPointRandomValue(float min, float max);
+        int64_t generateIntegerRandomValue(int32_t min, int32_t max);
 };
 
 #endif

@@ -38,3 +38,15 @@ std::uint64_t PseudoRandomNumberGenerator::generateCryptographicallyInsecureSeed
     uint64_t seed_from_milliseconds = time_as_milliseconds.count(); // convert the milliseconds to a bare integer and use that as our seed
     return seed_from_milliseconds;
 };
+
+double PseudoRandomNumberGenerator::generateFloatingPointRandomValue(float min, float max) {
+    double random_val = generateUnitNormalRandomValue();
+    double scaled_value = min + (random_val * (max - min));
+    return scaled_value;
+}
+
+int64_t PseudoRandomNumberGenerator::generateIntegerRandomValue(int32_t min, int32_t max) {
+    int64_t random_val = generateUnitNormalRandomValue();
+    int64_t scaled_value = min + (random_val * (max - min));
+    return scaled_value;
+}
