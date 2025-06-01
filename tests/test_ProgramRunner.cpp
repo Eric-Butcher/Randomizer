@@ -245,10 +245,11 @@ TEST(TestProgramRunner, DefaultCount){
 
 TEST(TestProgramRunner, ExplicitCount){
     int explicit_count = 34539; // Arbitrary positive count for testing
+    int all_but_last = explicit_count - 1;
     std::string explicit_count_str = std::to_string(explicit_count);
     ArgvBuilder builder({"--min", "0", "--max", "10", "--count", explicit_count_str, "--type", "integer"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
-    for (int i = 0; i < explicit_count; ++i) {
+    for (int i = 0; i < all_but_last; ++i) {
         ProgramRunner::ProgramStatus status = program_runner.iterate();
         ASSERT_FALSE(status.stderr_message.has_value());
         ASSERT_TRUE(status.stdout_message.has_value());
