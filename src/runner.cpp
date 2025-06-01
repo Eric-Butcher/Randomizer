@@ -303,7 +303,7 @@ ProgramRunner::ProgramStatus ProgramRunner::iterate() {
             
         case ProgramBehaviour::GenerateFloating: {
             this->iteration++;
-            float random_float = this->prng->generateFloatingPointRandomValue(
+            double random_float = this->prng->generateFloatingPointRandomValue(
                 std::get<float>(this->min.value_or(0.0f)),
                 std::get<float>(this->max.value_or(1.0f))
             );
@@ -313,7 +313,7 @@ ProgramRunner::ProgramStatus ProgramRunner::iterate() {
 
         case ProgramBehaviour::GenerateInteger: {
             this->iteration++;
-            int32_t random_int = this->prng->generateIntegerRandomValue(
+            int64_t random_int = this->prng->generateIntegerRandomValue(
                 std::get<int32_t>(this->min.value_or(0)),
                 std::get<int32_t>(this->max.value_or(1))
             );

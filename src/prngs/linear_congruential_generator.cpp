@@ -84,7 +84,7 @@ double LinearCongruentialGenerator::generateUnitNormalRandomValue() {
     }
 
     // Normalize the random value to [0, 1)
-    double normalized_value = static_cast<double>(random_value - m_minimum_value) / range;
+    double normalized_value = static_cast<double>(random_value - m_minimum_value) / static_cast<double>(range);
     return normalized_value;
 }
 
