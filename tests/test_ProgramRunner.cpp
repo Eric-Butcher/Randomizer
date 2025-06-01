@@ -3,6 +3,7 @@
 
 constexpr const char* highest_i32_plus_one = "2147483648";
 constexpr const char* lowest_i32_minus_one = "-2147483649";
+constexpr const char* highest_u32_plus_one = "4294967296";
 constexpr const char* highest_float_plus_more = "3.402823467e+38";
 constexpr const char* lowest_float_minus_more = "-3.402823467e+38";
 
@@ -294,7 +295,7 @@ TEST(TestProgramRunner, CountIsNegative){
 }
 
 TEST(TestProgramRunner, CountExcessivePositiveMagnitude){
-    ArgvBuilder builder({"--min", "0", "--max", "10", "--count", highest_i32_plus_one, "--type", "int"});
+    ArgvBuilder builder({"--min", "0", "--max", "10", "--count", highest_u32_plus_one, "--type", "int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.iterate();
     ASSERT_TRUE(status.stderr_message.has_value());
