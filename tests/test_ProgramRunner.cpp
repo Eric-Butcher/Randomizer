@@ -234,7 +234,7 @@ TEST(TestProgramRunner, MinAndMaxExcessivePositiveMagnitude){
 }
 
 TEST(TestProgramRunner, DefaultCount){
-    ArgvBuilder builder({"--min", "0", "--max", "10", "--type", "unit"});
+    ArgvBuilder builder({"--min", "0", "--max", "10", "--type", "floating"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.iterate();
     ASSERT_FALSE(status.stderr_message.has_value());
@@ -246,7 +246,7 @@ TEST(TestProgramRunner, DefaultCount){
 TEST(TestProgramRunner, ExplicitCount){
     int explicit_count = 34539; // Arbitrary positive count for testing
     std::string explicit_count_str = std::to_string(explicit_count);
-    ArgvBuilder builder({"--min", "0", "--max", "10", "--count", explicit_count_str, "--type", "unit"});
+    ArgvBuilder builder({"--min", "0", "--max", "10", "--count", explicit_count_str, "--type", "integer"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     for (int i = 0; i < explicit_count; ++i) {
         ProgramRunner::ProgramStatus status = program_runner.iterate();
@@ -263,7 +263,7 @@ TEST(TestProgramRunner, ExplicitCount){
 }
 
 TEST(TestProgramRunner, CountIsZero){
-    ArgvBuilder builder({"--min", "0", "--max", "10", "--count", "0", "--type", "unit"});
+    ArgvBuilder builder({"--min", "0", "--max", "10", "--count", "0", "--type", "int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.iterate();
     ASSERT_TRUE(status.stderr_message.has_value());
@@ -273,7 +273,7 @@ TEST(TestProgramRunner, CountIsZero){
 }
 
 TEST(TestProgramRunner, CountIsOne){
-    ArgvBuilder builder({"--min", "0", "--max", "10", "--count", "1", "--type", "unit"});
+    ArgvBuilder builder({"--count", "1", "--type", "unit"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.iterate();
     ASSERT_FALSE(status.stderr_message.has_value());
@@ -283,7 +283,7 @@ TEST(TestProgramRunner, CountIsOne){
 }
 
 TEST(TestProgramRunner, CountIsNegative){
-    ArgvBuilder builder({"--min", "0", "--max", "10", "--count", "-5", "--type", "unit"});
+    ArgvBuilder builder({"--min", "0", "--max", "10", "--count", "-5", "--type", "int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.iterate();
     ASSERT_TRUE(status.stderr_message.has_value());
