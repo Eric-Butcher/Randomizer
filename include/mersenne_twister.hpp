@@ -2,6 +2,7 @@
 #define MERSENNE_TWISTER_H
 
 #include <cstdint>
+#include <vector>
 #include "prng.hpp"
 
 class MersenneTwister : public PseudoRandomNumberGenerator {
@@ -47,9 +48,9 @@ private:
     
 
     uint64_t m_current_value = 0; 
-    std::vector<uint64_t> recurrence_state;
+    std::vector<uint64_t> m_recurrence_state;
 
-    std::vector<uint64_t> initializeRecurrenceState(const uint64_t seed);
+    std::vector<uint64_t> initializeRecurrenceState(const uint64_t seed, const uint64_t n, const uint64_t f, const uint64_t w);
 
 public:
     MersenneTwister();
