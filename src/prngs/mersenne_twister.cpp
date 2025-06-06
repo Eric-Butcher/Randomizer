@@ -1,23 +1,25 @@
+#include <vector>
+#include <cstdint>
 #include "prng.hpp"
+#include "mersenne_twister.hpp"
 
-class MersenneTwister : PseudoRandomNumberGenerator {
 
-    /* MT19937-64 coefficients:
-    w = 64
-    n = 312
-    m = 156
-    r = 31
-    a = 0xb5026f5aa96619e9
-    u = 29
-    d = 0x5555555555555555
-    s = 17
-    b = 0x71d67fffeda60000
-    t = 37
-    c = 0xfff7eee000000000
-    l = 43
-    f = 6364136223846793005
-    */
-    MersenneTwister(){
+MersenneTwister::MersenneTwister(){
 
+}
+
+MersenneTwister::MersenneTwister(const uint64_t seed) {
+    m_recurrence_state = initializeRecurrenceState(seed);
+    m_current_value = m_recurrence_state[0];
+}
+
+std::vector<uint64_t> MersenneTwister::initializeRecurrenceState(const uint64_t seed, const uint64_t n, const uint64_t f, const uint64_t w) {
+    std::vector<uint64_t> state(n);
+    state[0] = seed;
+    for (uint64_t i = 1; i < n; ++i) {
+        state[i] = (f * (state[i - 1] ^ (state[i - 1] >> (w - 2)))) + i;
     }
-};
+    return state;
+}
+
+
