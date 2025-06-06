@@ -48,9 +48,23 @@ private:
     
 
     uint64_t m_current_value = 0; 
+    uint64_t m_w;
+    uint64_t m_n;
+    uint64_t m_m;
+    uint64_t m_r;
+    uint64_t m_a;
+    uint64_t m_u;
+    uint64_t m_d;
+    uint64_t m_s;
+    uint64_t m_b;
+    uint64_t m_t;
+    uint64_t m_c;
+    uint64_t m_l;
+    uint64_t m_f;
     std::vector<uint64_t> m_recurrence_state;
+    
 
-    std::vector<uint64_t> initializeRecurrenceState(const uint64_t seed, const uint64_t n, const uint64_t f, const uint64_t w);
+    std::vector<uint64_t> initializeRecurrenceState(const uint64_t seed);
 
 public:
     MersenneTwister();
