@@ -9,7 +9,7 @@
 
 class ProgramRunner {   
 public:
-    ProgramRunner(int argc, char **argv);
+    ProgramRunner(int argc, char **argv, int warmup_iterations = 0);
 
     struct ProgramStatus {
         std::optional<std::string> stdout_message;
@@ -26,8 +26,6 @@ public:
     ProgramStatus run();
 
     bool is_finished();
-
-    void warmup(uint64_t iterations = 1000);
 
     const std::string version = "0.1";
     const std::string program_name = "randomizer";
@@ -109,6 +107,8 @@ private:
     void determine_count_configuration(const std::optional<std::string> &count_str);
     void determine_algorithm_configuration(const std::optional<std::string> &alg_str);
     void create_prng();
+    void warmup(uint64_t iterations);
+
 
     std::string error_string();
     std::string help_string();

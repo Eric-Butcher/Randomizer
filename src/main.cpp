@@ -6,8 +6,7 @@
 #include "program_runner.hpp"
 
 int main(int argc, char *argv[]){
-    ProgramRunner runner = ProgramRunner(argc, argv);
-    runner.warmup();
+    ProgramRunner runner = ProgramRunner(argc, argv, 1000);
     ProgramRunner::ProgramStatus status;
     while (!runner.is_finished()) {
         status = runner.iterate();

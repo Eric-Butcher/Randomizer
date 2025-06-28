@@ -232,7 +232,7 @@ ProgramRunner::RawArguments ProgramRunner::parse_args(int argc, char **argv) {
 void ProgramRunner::create_prng() {
 
     if (!this->algorithm.has_value()) {
-        return;
+        throw std::runtime_error("Algorithm not set, cannot create PseudoRandomNumberGenerator instance");
     }
 
     switch (this->algorithm.value()) {
@@ -256,10 +256,14 @@ void ProgramRunner::create_prng() {
     return;
 }
 
-ProgramRunner::ProgramRunner(int argc, char **argv){
+ProgramRunner::ProgramRunner(int argc, char **argv, int warmup_iterations){
     RawArguments raw_arguments = parse_args(argc, argv);
     determine_program_configuration(raw_arguments);
-    create_prng();
+    if (this->algorithm.has_value()) {
+        create_prng();
+        warmup(warmup_iterations);
+    }
+    
 }
 
 bool ProgramRunner::is_finished() {
@@ -358,6 +362,10 @@ ProgramRunner::ProgramStatus ProgramRunner::run() {
 }
 
 void ProgramRunner::warmup(uint64_t iterations) {
+    if (this->prng == nullptr) {
+        throw std::runtime_error("PRNG is not initialized, cannot warmup");
+    }
+
     for (uint64_t i = 0; i < iterations; ++i) {
         this->prng->generateRandomValue(); // Warmup the PRNG
     }
