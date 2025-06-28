@@ -10,6 +10,7 @@
 #include "prng.hpp"
 #include "xorshift.hpp"
 #include "linear_congruential_generator.hpp"
+#include "mersenne_twister.hpp"
 
 
 std::string ProgramRunner::error_string() {
@@ -240,6 +241,9 @@ void ProgramRunner::create_prng() {
             break;
         case ProgramRunner::Algorithm::LinearCongruentialGenerator:
             this->prng = std::make_unique<LinearCongruentialGenerator>();
+            break;
+        case ProgramRunner::Algorithm::MersenneTwister:
+            this->prng = std::make_unique<MersenneTwister>();
             break;
         default:
             throw std::runtime_error("Unsupported algorithm");

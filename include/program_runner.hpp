@@ -41,6 +41,7 @@ private:
     enum class Algorithm {
         XORShift,
         LinearCongruentialGenerator,
+        MersenneTwister
         // Add other algorithms here
     };
 
@@ -48,7 +49,10 @@ private:
         {"xorshift", Algorithm::XORShift},
         {"xor", Algorithm::XORShift},
         {"linear-congruential-generator", Algorithm::LinearCongruentialGenerator},
-        {"lcg", Algorithm::LinearCongruentialGenerator}
+        {"lcg", Algorithm::LinearCongruentialGenerator},
+        {"mersenne", Algorithm::MersenneTwister},
+        {"mersenne-twister", Algorithm::MersenneTwister},
+        {"mt", Algorithm::MersenneTwister}
     };
 
 
