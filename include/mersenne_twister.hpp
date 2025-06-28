@@ -46,25 +46,54 @@ private:
     static constexpr uint64_t Default_l = 43;
     static constexpr uint64_t Default_f = 6364136223846793005;
     
-
-    uint64_t m_current_value = 0; 
+    // word size
     uint64_t m_w;
+
+    // degree of the recurrence
     uint64_t m_n;
+
+    // middle word offset
     uint64_t m_m;
+
+    // separation point where the upper bitmask begins
     uint64_t m_r;
+
+    // twist matrix coefficient
     uint64_t m_a;
+
+    // MT bitwise constant
     uint64_t m_u;
+
+    // MT bitwise constant
     uint64_t m_d;
+
+    // bit shift used for tempering
     uint64_t m_s;
+
+    // bit mask used for tempering
     uint64_t m_b;
+
+    // bit shift used for tempering
     uint64_t m_t;
+
+    // bit mask used for tempering
     uint64_t m_c;
+
+    // MT bitwise constant
     uint64_t m_l;
+
+    // initialization constant
     uint64_t m_f;
+
+    uint64_t m_upper_bit_mask;
+    uint64_t m_lower_bit_mask;
     std::vector<uint64_t> m_recurrence_state;
+    int m_state_index;
     
 
     std::vector<uint64_t> initializeRecurrenceState(const uint64_t seed);
+    uint64_t generateNextStateValue();
+    uint64_t tempering(uint64_t);
 
 public:
     MersenneTwister();
