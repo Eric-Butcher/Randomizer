@@ -5,11 +5,8 @@
 #include "mersenne_twister.hpp"
 
 
-MersenneTwister::MersenneTwister(){
-
-}
-
-MersenneTwister::MersenneTwister(const uint64_t seed) {
+MersenneTwister::MersenneTwister()
+    : PseudoRandomNumberGenerator() {
     m_w = Default_w;
     m_n = Default_n;
     m_m = Default_m;
@@ -25,14 +22,35 @@ MersenneTwister::MersenneTwister(const uint64_t seed) {
     m_f = Default_f;
     m_lower_bit_mask = std::numeric_limits<uint64_t>::max() >> (m_w - m_r);
     m_upper_bit_mask = std::numeric_limits<uint64_t>::max() << (m_r);
-    m_recurrence_state = initializeRecurrenceState(seed);
+    m_recurrence_state = initializeRecurrenceState(m_seed);
+    m_state_index = 0;
+}
+
+MersenneTwister::MersenneTwister(const uint64_t seed)
+    : PseudoRandomNumberGenerator(seed) {
+    m_w = Default_w;
+    m_n = Default_n;
+    m_m = Default_m;
+    m_r = Default_r;
+    m_a = Default_a;
+    m_u = Default_u;
+    m_d = Default_d;
+    m_s = Default_s;
+    m_b = Default_b;
+    m_t = Default_t;
+    m_c = Default_c;
+    m_l = Default_l;
+    m_f = Default_f;
+    m_lower_bit_mask = std::numeric_limits<uint64_t>::max() >> (m_w - m_r);
+    m_upper_bit_mask = std::numeric_limits<uint64_t>::max() << (m_r);
+    m_recurrence_state = initializeRecurrenceState(m_seed);
     m_state_index = 0;
 }
 
 std::vector<uint64_t> MersenneTwister::initializeRecurrenceState(const uint64_t seed) {
     std::vector<uint64_t> state(m_n);
     state[0] = seed;
-    for (uint64_t i = 1; i < m_n; ++i) {
+    for (int i = 1; i < m_n; ++i) {
         state[i] = (m_f * (state[i - 1] ^ (state[i - 1] >> (m_w - 2)))) + i;
     }
     return state;
@@ -61,7 +79,7 @@ uint64_t MersenneTwister::generateNextStateValue(){
     }
 
     
-    uint64_t middle_index = k - (m_n - m_m);
+    int middle_index = k - (m_n - m_m);
     if (middle_index < 0){
         middle_index += m_n;
     }
@@ -88,4 +106,23 @@ uint64_t MersenneTwister::tempering(uint64_t val){
     return tempered_value;
 }
 
+uint64_t MersenneTwister::generateRandomValue(){
+    uint64_t raw_value = generateNextStateValue();
+    uint64_t tempered_value = tempering(raw_value);
+    return tempered_value;
+}
 
+// Generate a random value normalized to the range [0, 1)
+double MersenneTwister::generateUnitNormalRandomValue() {
+  
+    uint64_t random_value = generateRandomValue();
+
+    uint64_t range = m_maximum_value - m_minimum_value;
+    if (range == 0) {
+        return 0.0; // Avoid division by zero
+    }
+
+    // Normalize the random value to [0, 1)
+    double normalized_value = static_cast<double>(random_value - m_minimum_value) / static_cast<double>(range);
+    return normalized_value;
+}

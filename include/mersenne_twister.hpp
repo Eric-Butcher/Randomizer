@@ -32,10 +32,10 @@ private:
     }
     */
 
-    static constexpr uint64_t Default_w = 64;
-    static constexpr uint64_t Default_n = 312;
-    static constexpr uint64_t Default_m = 156;
-    static constexpr uint64_t Default_r = 31;
+    static constexpr int Default_w = 64;
+    static constexpr int Default_n = 312;
+    static constexpr int Default_m = 156;
+    static constexpr int Default_r = 31;
     static constexpr uint64_t Default_a = 0xb5026f5aa96619e9;
     static constexpr uint64_t Default_u = 29;
     static constexpr uint64_t Default_d = 0x5555555555555555;
@@ -47,16 +47,16 @@ private:
     static constexpr uint64_t Default_f = 6364136223846793005;
     
     // word size
-    uint64_t m_w;
+    int m_w;
 
     // degree of the recurrence
-    uint64_t m_n;
+    int m_n;
 
     // middle word offset
-    uint64_t m_m;
+    int m_m;
 
     // separation point where the upper bitmask begins
-    uint64_t m_r;
+    int m_r;
 
     // twist matrix coefficient
     uint64_t m_a;
