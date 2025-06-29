@@ -51,7 +51,6 @@ public:
     LinearCongruentialGenerator(const uint64_t seed, const uint64_t modulus, const uint64_t multiplier, const uint64_t increment, const uint64_t mask);
 
     uint64_t generateRandomValue() override;
-    double generateUnitNormalRandomValue() override;
 };
 
 #endif

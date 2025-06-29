@@ -20,7 +20,7 @@ class PseudoRandomNumberGenerator
         uint64_t generateCryptographicallyInsecureSeed();
 
         virtual uint64_t generateRandomValue() = 0;
-        virtual double generateUnitNormalRandomValue() = 0;
+        double generateUnitNormalRandomValue();
         double generateFloatingPointRandomValue(float min, float max);
         int64_t generateIntegerRandomValue(int32_t min, int32_t max);
 };
