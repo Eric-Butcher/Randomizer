@@ -123,7 +123,7 @@ TEST(TestXORShift, GenerateIntegerRandomValueEquidistributed){
     ASSERT_NEAR(expected_value, average, margin_of_error);
 }
 
-TEST(TestXORShift, GenerateIntegerRandomValueProducesInclusiveRange){
+TEST(TestXORShift, GenerateIntegerRandomValueProducesInclusiveRangePositive){
     XORShift xor_shift = XORShift();
     const int32_t min = 1;
     const int32_t max = 6;
@@ -147,3 +147,55 @@ TEST(TestXORShift, GenerateIntegerRandomValueProducesInclusiveRange){
     ASSERT_TRUE(found_min);
     ASSERT_TRUE(found_max);
 }
+
+TEST(TestXORShift, GenerateIntegerRandomValueProducesInclusiveRangeNegative){
+    XORShift xor_shift = XORShift();
+    const int32_t min = -6;
+    const int32_t max = -1;
+    const int max_iterations = 1000;
+    bool found_min = false;
+    bool found_max = false;
+
+    for (int i = 0; i < max_iterations; ++i) {
+        int64_t value = xor_shift.generateIntegerRandomValue(min, max);
+        if (value == min) {
+            found_min = true;
+        }
+        if (value == max) {
+            found_max = true;
+        }
+        if (found_min && found_max) {
+            break; // No need to continue if both values are found
+        }
+    }
+
+    ASSERT_TRUE(found_min);
+    ASSERT_TRUE(found_max);
+}
+
+TEST(TestXORShift, GenerateIntegerRandomValueProducesInclusiveRangeNegativeAndPositive){
+    XORShift xor_shift = XORShift();
+    const int32_t min = -10;
+    const int32_t max = 10;
+    const int max_iterations = 1000;
+    bool found_min = false;
+    bool found_max = false;
+
+    for (int i = 0; i < max_iterations; ++i) {
+        int64_t value = xor_shift.generateIntegerRandomValue(min, max);
+        if (value == min) {
+            found_min = true;
+        }
+        if (value == max) {
+            found_max = true;
+        }
+        if (found_min && found_max) {
+            break; // No need to continue if both values are found
+        }
+    }
+
+    ASSERT_TRUE(found_min);
+    ASSERT_TRUE(found_max);
+}
+
+

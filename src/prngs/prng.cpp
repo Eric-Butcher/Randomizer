@@ -47,8 +47,9 @@ double PseudoRandomNumberGenerator::generateFloatingPointRandomValue(float min, 
 
 int64_t PseudoRandomNumberGenerator::generateIntegerRandomValue(int32_t min, int32_t max) {
     double random_val = generateUnitNormalRandomValue();
-    double random_val_magnitude = random_val * (max - min + 1);
-    int64_t scaled_value = static_cast<int64_t>(min + random_val_magnitude);
+    int64_t inclusive_range = max - min + 1;
+    double random_val_magnitude = random_val * static_cast<double>(inclusive_range);
+    int64_t scaled_value = static_cast<int64_t>(random_val_magnitude) + min;
     return scaled_value;
 }
 
