@@ -125,10 +125,60 @@ TEST(TestLinearCongruentialGenerator, GenerateIntegerRandomValueEquidistributed)
 }
 
 
-TEST(TestLinearCongruentialGenerator, GenerateIntegerRandomValueProducesInclusiveRange){
+TEST(TestLinearCongruentialGenerator, GenerateIntegerRandomValueProducesInclusiveRangePositive){
     LinearCongruentialGenerator lcg = LinearCongruentialGenerator();
     const int32_t min = 1;
     const int32_t max = 6;
+    const int max_iterations = 1000;
+    bool found_min = false;
+    bool found_max = false;
+
+    for (int i = 0; i < max_iterations; ++i) {
+        int64_t value = lcg.generateIntegerRandomValue(min, max);
+        if (value == min) {
+            found_min = true;
+        }
+        if (value == max) {
+            found_max = true;
+        }
+        if (found_min && found_max) {
+            break; // No need to continue if both values are found
+        }
+    }
+
+    ASSERT_TRUE(found_min);
+    ASSERT_TRUE(found_max);
+}
+
+TEST(TestLinearCongruentialGenerator, GenerateIntegerRandomValueProducesInclusiveRangeNegative){
+    LinearCongruentialGenerator lcg = LinearCongruentialGenerator();
+    const int32_t min = -6;
+    const int32_t max = -1;
+    const int max_iterations = 1000;
+    bool found_min = false;
+    bool found_max = false;
+
+    for (int i = 0; i < max_iterations; ++i) {
+        int64_t value = lcg.generateIntegerRandomValue(min, max);
+        if (value == min) {
+            found_min = true;
+        }
+        if (value == max) {
+            found_max = true;
+        }
+        if (found_min && found_max) {
+            break; // No need to continue if both values are found
+        }
+    }
+
+    ASSERT_TRUE(found_min);
+    ASSERT_TRUE(found_max);
+}
+
+TEST(TestLinearCongruentialGenerator, GenerateIntegerRandomValueProducesInclusiveRangeNegativeAndPositive){
+    LinearCongruentialGenerator lcg = LinearCongruentialGenerator();
+    const int32_t min = -10;
+    const int32_t max = 10;
     const int max_iterations = 1000;
     bool found_min = false;
     bool found_max = false;
