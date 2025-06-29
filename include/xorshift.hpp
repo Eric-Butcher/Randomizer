@@ -34,7 +34,6 @@ public:
 
 
     uint64_t generateRandomValue() override;
-    double generateUnitNormalRandomValue() override;
 };
 
 #endif

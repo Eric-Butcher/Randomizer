@@ -111,18 +111,3 @@ uint64_t MersenneTwister::generateRandomValue(){
     uint64_t tempered_value = tempering(raw_value);
     return tempered_value;
 }
-
-// Generate a random value normalized to the range [0, 1)
-double MersenneTwister::generateUnitNormalRandomValue() {
-  
-    uint64_t random_value = generateRandomValue();
-
-    uint64_t range = m_maximum_value - m_minimum_value;
-    if (range == 0) {
-        return 0.0; // Avoid division by zero
-    }
-
-    // Normalize the random value to [0, 1)
-    double normalized_value = static_cast<double>(random_value - m_minimum_value) / static_cast<double>(range);
-    return normalized_value;
-}

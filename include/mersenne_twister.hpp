@@ -100,7 +100,6 @@ public:
     MersenneTwister(const uint64_t seed);
 
     uint64_t generateRandomValue() override;
-    double generateUnitNormalRandomValue() override;
 };
 
 #endif
