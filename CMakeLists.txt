@@ -24,6 +24,8 @@ target_include_directories(randomizer_lib PUBLIC ${CMAKE_SOURCE_DIR}/include)
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} PRIVATE randomizer_lib)
 
+# Make CPack install the binary in /usr/bin
+install(TARGETS ${PROJECT_NAME} DESTINATION /usr/bin)
 
 # Add compiler warnings only for GCC and Clang
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
