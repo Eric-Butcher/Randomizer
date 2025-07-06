@@ -1,0 +1,50 @@
+.TH RANDOMIZER 1 "2025-07-05" GNU
+.SH NAME
+randomizer \- a tool to generate pseudorandom numbers and sequences
+.SH SYNOPSIS
+.B randomizer
+.RI [ options ]
+
+.SH DESCRIPTION
+.B randomizer
+is a UNIX command line utility for generating pseudorandom numbers and sequences.
+A variety of different pseudorandom number generators can be used. This program is not
+necessarily intended to generate pseudorandom values quickly, in bulk quantities, or for scientific purposes. 
+.SH OPTIONS
+
+.TP
+.BR \-a  ", " \-\-algorithm " " \fIalgorithm\fP
+Specify the algorithm. Can be one of xorshift, linear-congruential-generator, or mersenne-twister. 
+If no algorithm is specified then xorshift will be used by default. 
+The shorthands xor, lcg, and mt can also be used for their respective algorithms. 
+
+.TP
+.BR \-c ", " \-\-count " " \fIamount\fP
+Specify the amount of random numbers to generate. If no amount is specified only one number will be generated. 
+
+.TP
+.BR \-h ", " \-\-help
+Show help message and exit.
+
+.TP
+.BR \-M ", " \-\-max " " \fInumber\fP
+Specify the maximum value that can be generated. 
+If generating an integer type the bound will be inclusive; the bound will be exclusive if generating a floating point type.
+This must always be used in conjunction with \-\-min. Ranges cannot be specified when generating unit-normal type values. 
+
+.TP
+.BR \-m ", " \-\-min " " \fInumber\fP
+Specify the minimum value that can be generated. 
+The minimum value will always be an inclusive bound regardless of the type being generated. 
+This must always be used in conjunction with \-\-max. Ranges cannot be specified when generating unit-normal type values. 
+
+.TP
+.BR \-t ", " \-\-type " " \fItype\fP
+Specify the type of numbers to be generated. Can be unit-normal, floating, or integer. 
+If generating floating or integer values the user must also specify a range using min and max. 
+Do not specify a range when creating unit-normal values. 
+The shorthands unit, float, and int can also be used for their respective values. 
+
+.TP
+.BR \-v ", " \-\-version
+Show version information.
