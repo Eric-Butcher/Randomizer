@@ -54,9 +54,6 @@ endif()
 
 enable_testing()
 
-# Do not want to include Google Test in the installation packages
-if(BUILD_TESTING)
-    add_subdirectory(tests)
-endif()
+add_subdirectory(tests)
 
 add_subdirectory(packaging)
