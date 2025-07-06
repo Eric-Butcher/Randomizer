@@ -15,25 +15,25 @@
 
 std::string ProgramRunner::error_string() {
     std::string error_string =  program_name + ": bad usage\n"
-              + "Try '" + program_name + " --help' for more information.\n";
+              + "Try '" + program_name + " --help' for more information.";
     return error_string;
 }
 
 std::string ProgramRunner::help_string() {
-    std::string help_string = "Usage: " + program_name + " [options]\n"
-              + "Options:\n"
-              + "  -h, --help           Show this help message\n"
-              + "  -v, --version        Show version information\n"
-              + "  -a, --algorithm      Specify the algorithm (default: xorshift)\n"
-              + "  -m, --min            Minimum value\n"
-              + "  -M, --max            Maximum value\n"
-              + "  -c, --count          Number of random numbers to generate (default: 1)\n"
-              + "  -t, --type           Specify the type to output (default: int)\n";
+    std::string help_string = "Usage: " + program_name + " [OPTIONS]\n\n"
+        + "Options:\n"
+        + "  -a ALGORITHM, --algorithm=ALGORITHM   Specify the algorithm [default: xorshift]\n"
+        + "  -c AMOUNT,    --count=AMOUNT          Amount of random numbers to generate [default: 1]\n"
+        + "  -M NUMBER,    --max=NUMBER            Maximum value\n"
+        + "  -m NUMBER,    --min=NUMBER            Minimum value\n"
+        + "  -t TYPE,      --type=TYPE             Specify the output type [default: int]\n"
+        + "  -h,           --help                  Display this help and exit\n"
+        + "  -v,           --version               Output version information and exit";
     return help_string;
 }   
 
 std::string ProgramRunner::version_string() {
-    std::string version_string = program_name + " " + version + "\n";
+    std::string version_string = program_name + " " + version;
     return version_string;
 }
 
