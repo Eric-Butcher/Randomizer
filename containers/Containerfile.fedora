@@ -1,7 +1,9 @@
 FROM fedora:42
 
+RUN dnf install -y man man-pages man-db less --setopt='tsflags='
+
 COPY ../build/out/*.rpm .
-RUN dnf install -y $(ls *.rpm | head -n1) && rm -rf ./*.rpm
+RUN dnf install -y $(ls *.rpm | head -n1) --setopt='tsflags=' && rm -rf ./*.rpm
 
 RUN groupadd unprivileged-group && \
     useradd -g unprivileged-group -N -m unprivileged-user
