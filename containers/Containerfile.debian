@@ -1,4 +1,6 @@
-FROM ubuntu:24.04
+FROM debian:12
+
+RUN apt-get update && apt-get install -y man man-db less
 
 COPY ../build/out/*.deb .
 RUN dpkg -i $(ls *.deb | head -n1) && rm -f ./*.deb
