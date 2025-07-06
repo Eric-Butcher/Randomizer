@@ -1,0 +1,11 @@
+FROM debian:12
+
+RUN apt-get update && apt-get install -y man man-db less
+
+COPY ../build/out/*.deb .
+RUN dpkg -i $(ls *.deb | head -n1) && rm -f ./*.deb
+
+RUN groupadd unprivileged-group && \
+    useradd -g unprivileged-group -N -m unprivileged-user
+WORKDIR /home/unprivileged-user
+USER unprivileged-user:unprivileged-group
