@@ -1,3 +1,6 @@
+#ifndef PROGRAM_RUNNER_H
+#define PROGRAM_RUNNER_H
+
 #include <cstdint>
 #include <iostream>
 #include <cstdlib>
@@ -132,3 +135,5 @@ private:
 
 
 };
+
+#endif
