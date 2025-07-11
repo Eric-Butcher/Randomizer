@@ -15,9 +15,11 @@ Checks: >
   -cppcoreguidelines-owning-memory,
   -readability-convert-member-functions-to-static,
   -bugprone-easily-swappable-parameters,
-  -cppcoreguidelines-pro-type-static-cast-downcast
+  -cppcoreguidelines-pro-type-static-cast-downcast,
+  -readability-magic-numbers,
+  -cppcoreguidelines-avoid-magic-numbers
 WarningsAsErrors: ''
-HeaderFilterRegex: ''
+HeaderFilterRegex: '^(?!.*googletest-src).*'
 FormatStyle: none
 InheritParentConfig: true
-# ./run-clang-tidy.py -p build
+# ./run-clang-tidy.py -p build -source-filter '^(?!.*_deps/googletest-src/).*'
