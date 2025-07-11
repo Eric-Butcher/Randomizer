@@ -88,7 +88,7 @@ private:
     uint64_t m_upper_bit_mask;
     uint64_t m_lower_bit_mask;
     std::vector<uint64_t> m_recurrence_state;
-    int m_state_index;
+    int m_state_index = 0;
     
 
     std::vector<uint64_t> initializeRecurrenceState(const uint64_t seed);
