@@ -6,45 +6,42 @@
 
 
 MersenneTwister::MersenneTwister()
-    : PseudoRandomNumberGenerator() {
-    m_w = Default_w;
-    m_n = Default_n;
-    m_m = Default_m;
-    m_r = Default_r;
-    m_a = Default_a;
-    m_u = Default_u;
-    m_d = Default_d;
-    m_s = Default_s;
-    m_b = Default_b;
-    m_t = Default_t;
-    m_c = Default_c;
-    m_l = Default_l;
-    m_f = Default_f;
+    : m_w(Default_w),
+      m_n(Default_n),
+      m_m(Default_m),
+      m_r(Default_r),
+      m_a(Default_a),
+      m_u(Default_u),
+      m_d(Default_d),
+      m_s(Default_s),
+      m_b(Default_b),
+      m_t(Default_t),
+      m_c(Default_c),
+      m_l(Default_l),
+      m_f(Default_f) {
     m_lower_bit_mask = std::numeric_limits<uint64_t>::max() >> (m_w - m_r);
     m_upper_bit_mask = std::numeric_limits<uint64_t>::max() << (m_r);
     m_recurrence_state = initializeRecurrenceState(m_seed);
-    m_state_index = 0;
 }
 
 MersenneTwister::MersenneTwister(const uint64_t seed)
-    : PseudoRandomNumberGenerator(seed) {
-    m_w = Default_w;
-    m_n = Default_n;
-    m_m = Default_m;
-    m_r = Default_r;
-    m_a = Default_a;
-    m_u = Default_u;
-    m_d = Default_d;
-    m_s = Default_s;
-    m_b = Default_b;
-    m_t = Default_t;
-    m_c = Default_c;
-    m_l = Default_l;
-    m_f = Default_f;
+    : PseudoRandomNumberGenerator(seed),
+      m_w(Default_w),
+      m_n(Default_n),
+      m_m(Default_m),
+      m_r(Default_r),
+      m_a(Default_a),
+      m_u(Default_u),
+      m_d(Default_d),
+      m_s(Default_s),
+      m_b(Default_b),
+      m_t(Default_t),
+      m_c(Default_c),
+      m_l(Default_l),
+      m_f(Default_f) {
     m_lower_bit_mask = std::numeric_limits<uint64_t>::max() >> (m_w - m_r);
     m_upper_bit_mask = std::numeric_limits<uint64_t>::max() << (m_r);
     m_recurrence_state = initializeRecurrenceState(m_seed);
-    m_state_index = 0;
 }
 
 std::vector<uint64_t> MersenneTwister::initializeRecurrenceState(const uint64_t seed) {

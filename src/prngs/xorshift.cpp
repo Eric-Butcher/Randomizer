@@ -5,8 +5,7 @@
 
 // Default constructor
 XORShift::XORShift()
-    : PseudoRandomNumberGenerator(),
-      m_a(DefaultA),
+    : m_a(DefaultA),
       m_b(DefaultB),
       m_c(DefaultC),
       m_current_value(m_seed) {}
