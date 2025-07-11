@@ -16,6 +16,7 @@ class PseudoRandomNumberGenerator
         PseudoRandomNumberGenerator(const uint64_t seed);
         PseudoRandomNumberGenerator(const uint64_t minimum_value, const uint64_t maximum_value);
         PseudoRandomNumberGenerator(const uint64_t seed, const uint64_t minimum_value, const uint64_t maximum_value);
+        virtual ~PseudoRandomNumberGenerator() {}
 
         uint64_t generateCryptographicallyInsecureSeed();
 
