@@ -9,17 +9,11 @@ Checks: >
   -modernize-use-trailing-return-type, 
   -modernize-use-nodiscard,
   -readability-identifier-length,
-  -readability-redundant-access-specifiers,
-  -readability-qualified-auto,
-  -cppcoreguidelines-avoid-non-const-global-variables,
-  -cppcoreguidelines-owning-memory,
-  -readability-convert-member-functions-to-static,
   -bugprone-easily-swappable-parameters,
-  -cppcoreguidelines-pro-type-static-cast-downcast,
   -readability-magic-numbers,
   -cppcoreguidelines-avoid-magic-numbers
 WarningsAsErrors: ''
-HeaderFilterRegex: '^(?!.*googletest-src).*'
+HeaderFilterRegex: ''
 FormatStyle: none
 InheritParentConfig: true
 # ./run-clang-tidy.py -p build -source-filter '^(?!.*_deps/googletest-src/).*'
