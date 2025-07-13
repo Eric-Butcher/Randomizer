@@ -12,7 +12,7 @@
 
 class ProgramRunner {   
 public:
-    ProgramRunner(int argc, char **argv, int warmup_iterations = 0);
+    ProgramRunner(int argc, char **argv, uint64_t warmup_iterations = 0);
 
     struct ProgramStatus {
         std::optional<std::string> stdout_message;
@@ -102,8 +102,8 @@ private:
     static constexpr uint32_t DefaultCount = 1;
     static constexpr ProgramBehaviour DefaultGenerationType = ProgramBehaviour::GenerateInteger;
 
-    RawArguments parse_args(int argc, char **argv);
-    void determine_program_configuration(const RawArguments &raw_arguments);
+    static RawArguments parse_args(int argc, char **argv);
+    void determine_program_configuration(const RawArguments &raw_args);
     void determine_user_message_configuration(const bool error, const bool show_version, const bool show_help);
     void determine_generation_range_configuration(const std::optional<std::string> &min_str, const std::optional<std::string> &max_str);
     void determine_generation_type_configuration(const std::optional<std::string> &generation_type);
