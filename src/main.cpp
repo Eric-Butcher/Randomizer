@@ -1,11 +1,12 @@
-#include <iostream>
-#include <getopt.h>
-#include "prng.hpp"
 #include "linear_congruential_generator.hpp"
-#include "xorshift.hpp"
+#include "prng.hpp"
 #include "program_runner.hpp"
+#include "xorshift.hpp"
+#include <getopt.h>
+#include <iostream>
 
-int main(int argc, char *argv[]){
+int main(int argc, char* argv[])
+{
     ProgramRunner runner = ProgramRunner(argc, argv, 1000);
     ProgramRunner::ProgramStatus status;
     while (!runner.is_finished()) {

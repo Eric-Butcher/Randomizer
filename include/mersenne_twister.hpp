@@ -1,14 +1,13 @@
 #ifndef MERSENNE_TWISTER_H
 #define MERSENNE_TWISTER_H
 
+#include "prng.hpp"
 #include <cstdint>
 #include <vector>
-#include "prng.hpp"
 
 class MersenneTwister : public PseudoRandomNumberGenerator {
 
 private:
-
     /* MT19937-64 coefficients:
     w = 64 , word size in bits
     n = 312, degree of recurrence
@@ -45,7 +44,7 @@ private:
     static constexpr uint64_t Default_c = 0xfff7eee000000000;
     static constexpr uint64_t Default_l = 43;
     static constexpr uint64_t Default_f = 6364136223846793005;
-    
+
     // word size
     int m_w;
 
@@ -89,7 +88,6 @@ private:
     uint64_t m_lower_bit_mask;
     std::vector<uint64_t> m_recurrence_state;
     int m_state_index = 0;
-    
 
     std::vector<uint64_t> initializeRecurrenceState(const uint64_t seed) const;
     uint64_t generateNextStateValue();
