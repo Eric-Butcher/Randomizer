@@ -38,6 +38,10 @@ jobs:
         with:
           name: built
           path: ./build
+
+      - name: Make test binary executable
+        run: chmod +x build/bin/RandomizerTests
+        
       - name: run-tests
         run: ctest --test-dir build --output-on-failure
 
