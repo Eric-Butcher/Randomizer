@@ -39,11 +39,11 @@ std::string ProgramRunner::version_string()
     return version_string;
 }
 
-template<typename T>
+template <typename T>
 concept FromCharsParsable = std::is_integral_v<T> || std::is_floating_point_v<T>;
 
 // Helper function for parsing a string to a numeric type using std::from_chars
-template<FromCharsParsable T>
+template <FromCharsParsable T>
 std::optional<T> parse_value(std::string const& str)
 {
     T value;
@@ -54,7 +54,7 @@ std::optional<T> parse_value(std::string const& str)
     return value;
 }
 
-template<FromCharsParsable T>
+template <FromCharsParsable T>
 std::optional<std::pair<T, T>> parse_min_and_max_numbers(std::string const& min_str, std::string const& max_str)
 {
     std::optional<T> min_value = parse_value<T>(min_str);

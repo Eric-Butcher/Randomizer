@@ -8,4 +8,4 @@ BreakBeforeInheritanceComma: true
 BreakConstructorInitializers: BeforeComma
 NamespaceIndentation: None
 QualifierAlignment: Right
-SpaceAfterTemplateKeyword: false
+# find include src \( -name '*.cpp' -o -name '*.hpp' \) -exec clang-format -i {} +
