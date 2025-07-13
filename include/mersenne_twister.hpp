@@ -91,9 +91,9 @@ private:
     int m_state_index = 0;
     
 
-    std::vector<uint64_t> initializeRecurrenceState(const uint64_t seed);
+    std::vector<uint64_t> initializeRecurrenceState(const uint64_t seed) const;
     uint64_t generateNextStateValue();
-    uint64_t tempering(uint64_t);
+    uint64_t tempering(uint64_t) const;
 
 public:
     MersenneTwister();

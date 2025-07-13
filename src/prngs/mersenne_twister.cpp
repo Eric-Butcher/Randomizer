@@ -43,10 +43,10 @@ MersenneTwister::MersenneTwister(const uint64_t seed)
       m_lower_bit_mask(std::numeric_limits<uint64_t>::max() >> (m_w - m_r)),
       m_recurrence_state(initializeRecurrenceState(m_seed)) {}
 
-std::vector<uint64_t> MersenneTwister::initializeRecurrenceState(const uint64_t seed) {
-    std::vector<uint64_t> state(m_n);
+std::vector<uint64_t> MersenneTwister::initializeRecurrenceState(const uint64_t seed) const {
+    std::vector<uint64_t> state(static_cast<size_t>(m_n));
     state[0] = seed;
-    for (int i = 1; i < m_n; ++i) {
+    for (size_t i = 1; i < static_cast<size_t>(m_n); ++i) {
         state[i] = (m_f * (state[i - 1] ^ (state[i - 1] >> (m_w - 2)))) + i;
     }
     return state;
@@ -65,12 +65,12 @@ uint64_t MersenneTwister::generateNextStateValue(){
         lower_index += m_n;
     }
 
-    uint64_t upper_part = m_recurrence_state[upper_index] & m_upper_bit_mask;
-    uint64_t lower_part = m_recurrence_state[lower_index] & m_lower_bit_mask;
+    uint64_t upper_part = m_recurrence_state[static_cast<size_t>(upper_index)] & m_upper_bit_mask;
+    uint64_t lower_part = m_recurrence_state[static_cast<size_t>(lower_index)] & m_lower_bit_mask;
     uint64_t concatenated_value = upper_part | lower_part;
 
     uint64_t matrix_mul_result = concatenated_value >> 1;
-    if (concatenated_value & 0b1){
+    if ((concatenated_value & 0b1) == 0b1){
         matrix_mul_result ^= m_a;
     }
 
@@ -79,11 +79,11 @@ uint64_t MersenneTwister::generateNextStateValue(){
     if (middle_index < 0){
         middle_index += m_n;
     }
-    uint64_t middle_value = m_recurrence_state[middle_index];
+    uint64_t middle_value = m_recurrence_state[static_cast<size_t>(middle_index)];
 
     uint64_t state_value = matrix_mul_result ^ middle_value; 
     
-    m_recurrence_state[k] = state_value;
+    m_recurrence_state[static_cast<size_t>(k)] = state_value;
 
     m_state_index++;
     if (m_state_index >= m_n){
@@ -94,7 +94,7 @@ uint64_t MersenneTwister::generateNextStateValue(){
     
 }
 
-uint64_t MersenneTwister::tempering(uint64_t val){
+uint64_t MersenneTwister::tempering(uint64_t val) const {
     uint64_t tempered_value = val ^ (val >> m_u);
     tempered_value ^= ((tempered_value << m_s) & m_b);
     tempered_value ^= ((tempered_value << m_t) & m_c);
