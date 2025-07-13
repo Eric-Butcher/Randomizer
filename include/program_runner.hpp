@@ -1,18 +1,18 @@
 #ifndef PROGRAM_RUNNER_H
 #define PROGRAM_RUNNER_H
 
+#include "prng.hpp"
 #include <cstdint>
-#include <iostream>
 #include <cstdlib>
-#include <optional>
-#include <variant>
+#include <iostream>
 #include <map>
 #include <memory>
-#include "prng.hpp"
+#include <optional>
+#include <variant>
 
-class ProgramRunner {   
+class ProgramRunner {
 public:
-    ProgramRunner(int argc, char **argv, uint64_t warmup_iterations = 0);
+    ProgramRunner(int argc, char** argv, uint64_t warmup_iterations = 0);
 
     struct ProgramStatus {
         std::optional<std::string> stdout_message;
@@ -33,12 +33,7 @@ public:
     const std::string version = "0.1";
     const std::string program_name = "randomizer";
 
-
-
-    
-
 private:
-
     enum class Algorithm {
         XORShift,
         LinearCongruentialGenerator,
@@ -47,16 +42,14 @@ private:
     };
 
     const std::map<std::string, Algorithm> algorithm_choices {
-        {"xorshift", Algorithm::XORShift},
-        {"xor", Algorithm::XORShift},
-        {"linear-congruential-generator", Algorithm::LinearCongruentialGenerator},
-        {"lcg", Algorithm::LinearCongruentialGenerator},
-        {"mersenne", Algorithm::MersenneTwister},
-        {"mersenne-twister", Algorithm::MersenneTwister},
-        {"mt", Algorithm::MersenneTwister}
+        { "xorshift", Algorithm::XORShift },
+        { "xor", Algorithm::XORShift },
+        { "linear-congruential-generator", Algorithm::LinearCongruentialGenerator },
+        { "lcg", Algorithm::LinearCongruentialGenerator },
+        { "mersenne", Algorithm::MersenneTwister },
+        { "mersenne-twister", Algorithm::MersenneTwister },
+        { "mt", Algorithm::MersenneTwister }
     };
-
-
 
     enum class ProgramBehaviour {
         Error,
@@ -68,16 +61,16 @@ private:
     };
 
     const std::map<std::string, ProgramBehaviour> generation_types {
-        {"unit", ProgramBehaviour::GenerateUnitNormal},
-        {"normal", ProgramBehaviour::GenerateUnitNormal},
-        {"unit-normal", ProgramBehaviour::GenerateUnitNormal},
-        {"normalized", ProgramBehaviour::GenerateUnitNormal},
-        {"float", ProgramBehaviour::GenerateFloating},
-        {"floating", ProgramBehaviour::GenerateFloating},
-        {"decimal", ProgramBehaviour::GenerateFloating},
-        {"floating-point", ProgramBehaviour::GenerateFloating},
-        {"int", ProgramBehaviour::GenerateInteger},
-        {"integer", ProgramBehaviour::GenerateInteger}
+        { "unit", ProgramBehaviour::GenerateUnitNormal },
+        { "normal", ProgramBehaviour::GenerateUnitNormal },
+        { "unit-normal", ProgramBehaviour::GenerateUnitNormal },
+        { "normalized", ProgramBehaviour::GenerateUnitNormal },
+        { "float", ProgramBehaviour::GenerateFloating },
+        { "floating", ProgramBehaviour::GenerateFloating },
+        { "decimal", ProgramBehaviour::GenerateFloating },
+        { "floating-point", ProgramBehaviour::GenerateFloating },
+        { "int", ProgramBehaviour::GenerateInteger },
+        { "integer", ProgramBehaviour::GenerateInteger }
     };
 
     struct RawArguments {
@@ -96,22 +89,20 @@ private:
         std::optional<std::string> count_str;
     };
 
-    
     // Defaults
 
     static constexpr uint32_t DefaultCount = 1;
     static constexpr ProgramBehaviour DefaultGenerationType = ProgramBehaviour::GenerateInteger;
 
-    static RawArguments parse_args(int argc, char **argv);
-    void determine_program_configuration(const RawArguments &raw_args);
-    void determine_user_message_configuration(const bool error, const bool show_version, const bool show_help);
-    void determine_generation_range_configuration(const std::optional<std::string> &min_str, const std::optional<std::string> &max_str);
-    void determine_generation_type_configuration(const std::optional<std::string> &generation_type);
-    void determine_count_configuration(const std::optional<std::string> &count_str);
-    void determine_algorithm_configuration(const std::optional<std::string> &alg_str);
+    static RawArguments parse_args(int argc, char** argv);
+    void determine_program_configuration(RawArguments const& raw_args);
+    void determine_user_message_configuration(bool const error, bool const show_version, bool const show_help);
+    void determine_generation_range_configuration(std::optional<std::string> const& min_str, std::optional<std::string> const& max_str);
+    void determine_generation_type_configuration(std::optional<std::string> const& generation_type);
+    void determine_count_configuration(std::optional<std::string> const& count_str);
+    void determine_algorithm_configuration(std::optional<std::string> const& alg_str);
     void create_prng();
     void warmup(uint64_t iterations);
-
 
     std::string error_string();
     std::string help_string();
@@ -131,9 +122,6 @@ private:
     // Exit codes
     static constexpr int ExitCodeSuccess = 0;
     static constexpr int ExitCodeError = 1;
-
-
-
 };
 
 #endif

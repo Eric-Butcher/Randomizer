@@ -1,33 +1,37 @@
-#include <cstdint>
 #include "xorshift.hpp"
 #include "prng.hpp"
-
+#include <cstdint>
 
 // Default constructor
 XORShift::XORShift()
-    : m_a(DefaultA),
-      m_b(DefaultB),
-      m_c(DefaultC),
-      m_current_value(m_seed) {}
+    : m_a(DefaultA)
+    , m_b(DefaultB)
+    , m_c(DefaultC)
+    , m_current_value(m_seed)
+{
+}
 
 XORShift::XORShift(const uint64_t seed)
-    : PseudoRandomNumberGenerator(seed),
-      m_a(DefaultA),
-      m_b(DefaultB),
-      m_c(DefaultC),
-      m_current_value(m_seed) {}
+    : PseudoRandomNumberGenerator(seed)
+    , m_a(DefaultA)
+    , m_b(DefaultB)
+    , m_c(DefaultC)
+    , m_current_value(m_seed)
+{
+}
 
 XORShift::XORShift(const uint64_t seed, const uint64_t a, const uint64_t b, const uint64_t c)
-    : PseudoRandomNumberGenerator(seed),
-      m_a(a),
-      m_b(b),
-      m_c(c),
-      m_current_value(m_seed) {}
-
-
+    : PseudoRandomNumberGenerator(seed)
+    , m_a(a)
+    , m_b(b)
+    , m_c(c)
+    , m_current_value(m_seed)
+{
+}
 
 // Generate a random value anywhere in the range of the XORShift algorithm
-uint64_t XORShift::generateRandomValue() {
+uint64_t XORShift::generateRandomValue()
+{
     // Compute the standard LCG formula for the next value
     m_current_value ^= (m_current_value << m_a);
     m_current_value ^= (m_current_value >> m_b);

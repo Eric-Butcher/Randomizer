@@ -1,8 +1,8 @@
 #ifndef LINEAR_CONGRUENTIAL_GENERATOR_H
 #define LINEAR_CONGRUENTIAL_GENERATOR_H
 
-#include <cstdint>
 #include "prng.hpp"
+#include <cstdint>
 
 class LinearCongruentialGenerator : public PseudoRandomNumberGenerator {
     // https://en.wikipedia.org/wiki/Linear_congruential_generator#
@@ -15,11 +15,10 @@ class LinearCongruentialGenerator : public PseudoRandomNumberGenerator {
         a is the multiplier
         c is the increment
 
-        glibc uses m=2^{31} a=1103515245 c=12345 and masks the result with 0x3FFFFFFF 
+        glibc uses m=2^{31} a=1103515245 c=12345 and masks the result with 0x3FFFFFFF
         which is what is used for the default implementation here
     */
 private:
-    
     // Defaults used from the glibc implementation, see:
     /* @misc{ enwiki:1280426923,
         author = "{Wikipedia contributors}",
@@ -29,17 +28,16 @@ private:
         note = "[Online; accessed 10-May-2025]"
     } */
 
-    static constexpr uint64_t DefaultModulus = 0x7FFFFFFF;      
+    static constexpr uint64_t DefaultModulus = 0x7FFFFFFF;
     static constexpr uint64_t DefaultMultiplier = 1103515245;
     static constexpr uint64_t DefaultIncrement = 12345;
-    static constexpr uint64_t DefaultMask = 0x7FFFFFFF;          // bits 0 through 30
+    static constexpr uint64_t DefaultMask = 0x7FFFFFFF; // bits 0 through 30
 
     const uint64_t m_modulus;
     const uint64_t m_multiplier;
     const uint64_t m_increment;
     const uint64_t m_mask;
-    uint64_t m_current_value = 0; 
-
+    uint64_t m_current_value = 0;
 
     static uint64_t getMinimumValue(const std::uint64_t mask);
     static uint64_t getMaximumValue(const uint64_t modulus, const uint64_t mask);

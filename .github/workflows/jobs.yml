@@ -1,4 +1,4 @@
-name: Test and Lint
+name: Jobs
 
 on:
   push:
@@ -45,6 +45,19 @@ jobs:
       - name: run-tests
         run: ctest --test-dir build --output-on-failure
 
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Install clang-format
+        run: sudo apt update && sudo apt-get install -y clang clang-format-14
+
+      - name: Run clang-format
+        run: find include src \( -name '*.cpp' -o -name '*.hpp' \) -exec clang-format-14 --dry-run --Werror {} +
+
   lint:
     needs: build
     runs-on: ubuntu-latest
@@ -58,7 +71,7 @@ jobs:
           name: built
           path: ./build
 
-      - name: Get clang-tidy
+      - name: Install clang-tidy
         run: sudo apt-get update && sudo apt-get install -y cmake clang clang-tidy g++
 
       - name: lint

@@ -1,0 +1,11 @@
+---
+AlignEscapedNewlines: Left
+BasedOnStyle: WebKit
+BraceWrapping:
+    AfterFunction: true
+BreakBeforeBraces: Custom
+BreakBeforeInheritanceComma: true
+BreakConstructorInitializers: BeforeComma
+NamespaceIndentation: None
+QualifierAlignment: Right
+# find include src \( -name '*.cpp' -o -name '*.hpp' \) -exec clang-format -i {} +
