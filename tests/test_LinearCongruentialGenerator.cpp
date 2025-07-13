@@ -5,32 +5,36 @@
 #include <limits>
 #include <cmath>
 
+static constexpr uint64_t minval = std::numeric_limits<uint64_t>::min();
+static constexpr uint64_t maxval = std::numeric_limits<uint64_t>::max();
+
+
 // Test that the lcg constructors do not fail
 TEST(TestLinearCongruentialGenerator, BlankConstructor) {
-    EXPECT_NO_THROW(LinearCongruentialGenerator());
+    EXPECT_NO_THROW(auto lcg = LinearCongruentialGenerator());
 }
 
 TEST(TestLinearCongruentialGenerator, SeedConstructor) {
-    EXPECT_NO_THROW(LinearCongruentialGenerator(std::numeric_limits<uint64_t>::min()));
-    EXPECT_NO_THROW(LinearCongruentialGenerator(std::numeric_limits<uint64_t>::min() + 1));
-    EXPECT_NO_THROW(LinearCongruentialGenerator(std::numeric_limits<uint64_t>::max() / 10));
-    EXPECT_NO_THROW(LinearCongruentialGenerator(std::numeric_limits<uint64_t>::max() / 2));
-    EXPECT_NO_THROW(LinearCongruentialGenerator(std::numeric_limits<uint64_t>::max() - 1));
-    EXPECT_NO_THROW(LinearCongruentialGenerator(std::numeric_limits<uint64_t>::max()));
+    EXPECT_NO_THROW(auto lcg = LinearCongruentialGenerator(minval));
+    EXPECT_NO_THROW(auto lcg = LinearCongruentialGenerator(minval + 1));
+    EXPECT_NO_THROW(auto lcg = LinearCongruentialGenerator(maxval / 10));
+    EXPECT_NO_THROW(auto lcg = LinearCongruentialGenerator(maxval / 2));
+    EXPECT_NO_THROW(auto lcg = LinearCongruentialGenerator(maxval - 1));
+    EXPECT_NO_THROW(auto lcg = LinearCongruentialGenerator(maxval));
 }
 
 TEST(TestLinearCongruentialGenerator, CustomConstructor) {
-    EXPECT_NO_THROW(LinearCongruentialGenerator(0x7FFFFFFF, 1103515245, 12345, 0x7FFFFFFF));
-    EXPECT_NO_THROW(LinearCongruentialGenerator(60, 3453983, 897, 0xFFFFFFFF));
-    EXPECT_NO_THROW(LinearCongruentialGenerator(0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF));
-    EXPECT_NO_THROW(LinearCongruentialGenerator(1, std::numeric_limits<uint64_t>::max() / 2, -50, 0xFFF));
+    EXPECT_NO_THROW(auto lcg = LinearCongruentialGenerator(0x7FFFFFFF, 1103515245, 12345, 0x7FFFFFFF));
+    EXPECT_NO_THROW(auto lcg = LinearCongruentialGenerator(60, 3453983, 897, 0xFFFFFFFF));
+    EXPECT_NO_THROW(auto lcg = LinearCongruentialGenerator(0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF));
+    EXPECT_NO_THROW(auto lcg = LinearCongruentialGenerator(1, maxval / 2, 50, 0xFFF));
 }
 
 TEST(TestLinearCongruentialGenerator, SeedAndCustomConstructor) {
-    EXPECT_NO_THROW(LinearCongruentialGenerator(std::numeric_limits<uint64_t>::min(), 0x7FFFFFFF, 1103515245, 12345, 0x7FFFFFFF));
-    EXPECT_NO_THROW(LinearCongruentialGenerator(std::numeric_limits<uint64_t>::max(), 60, 3453983, 897, 0xFFFFFFFF));
-    EXPECT_NO_THROW(LinearCongruentialGenerator(std::numeric_limits<uint64_t>::max() / 2, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF));
-    EXPECT_NO_THROW(LinearCongruentialGenerator(std::numeric_limits<uint64_t>::max() - 1, 1, std::numeric_limits<uint64_t>::max() / 2, 58678575, 0xFFFFFF));
+    EXPECT_NO_THROW(auto lcg = LinearCongruentialGenerator(minval, 0x7FFFFFFF, 1103515245, 12345, 0x7FFFFFFF));
+    EXPECT_NO_THROW(auto lcg = LinearCongruentialGenerator(maxval, 60, 3453983, 897, 0xFFFFFFFF));
+    EXPECT_NO_THROW(auto lcg = LinearCongruentialGenerator(maxval / 2, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF));
+    EXPECT_NO_THROW(auto lcg = LinearCongruentialGenerator(maxval - 1, 1, maxval / 2, 58678575, 0xFFFFFF));
 }
 
 TEST(TestLinearCongruentialGenerator, GenerateUnitNormalRandomValueHasCorrectRange) {
@@ -66,8 +70,8 @@ TEST(TestLinearCongruentialGenerator, GenerateUnitNormalRandomValueEquidistribut
 
 TEST(TestLinearCongruentialGenerator, GenerateFloatingPointRandomValueInRange){
     LinearCongruentialGenerator lcg = LinearCongruentialGenerator();
-    const float min = -25.678f;
-    const float max = 3242.342f;
+    const float min = -25.678F;
+    const float max = 3242.342F;
     const int num_iterations = 1000;
     for (int i = 0; i < num_iterations; ++i){
         double value = lcg.generateFloatingPointRandomValue(min, max);
@@ -78,8 +82,8 @@ TEST(TestLinearCongruentialGenerator, GenerateFloatingPointRandomValueInRange){
 
 TEST(TestLinearCongruentialGenerator, GenerateFloatingPointRandomValueEquidistributed){
     LinearCongruentialGenerator lcg = LinearCongruentialGenerator();
-    const double min = -300.0;
-    const double max = 700.0;
+    const float min = -300.0F;
+    const float max = 700.0F;
     const int num_iterations = 10000;
     double sum = 0.0;
     double variance_sum = 0.0;
@@ -93,7 +97,7 @@ TEST(TestLinearCongruentialGenerator, GenerateFloatingPointRandomValueEquidistri
     double variance = variance_sum / num_iterations;
     double standard_deviation = std::sqrt(variance);
     double three_sigma = 3 * standard_deviation;
-    ASSERT_NEAR(expected_value, average, three_sigma);;
+    ASSERT_NEAR(expected_value, average, three_sigma);
 
 }
 

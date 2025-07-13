@@ -5,18 +5,22 @@
 #include <limits>
 #include <cmath>
 
+static constexpr uint64_t minval = std::numeric_limits<uint64_t>::min();
+static constexpr uint64_t maxval = std::numeric_limits<uint64_t>::max();
+
+
 // Test that the mt constructors do not fail
 TEST(TestMersenneTwister, BlankConstructor) {
-    EXPECT_NO_THROW(MersenneTwister());
+    EXPECT_NO_THROW(auto mt = MersenneTwister());
 }
 
 TEST(TestMersenneTwister, SeedConstructor) {
-    EXPECT_NO_THROW(MersenneTwister(std::numeric_limits<uint64_t>::min()));
-    EXPECT_NO_THROW(MersenneTwister(std::numeric_limits<uint64_t>::min() + 1));
-    EXPECT_NO_THROW(MersenneTwister(std::numeric_limits<uint64_t>::max() / 10));
-    EXPECT_NO_THROW(MersenneTwister(std::numeric_limits<uint64_t>::max() / 2));
-    EXPECT_NO_THROW(MersenneTwister(std::numeric_limits<uint64_t>::max() - 1));
-    EXPECT_NO_THROW(MersenneTwister(std::numeric_limits<uint64_t>::max()));
+    EXPECT_NO_THROW(auto mt = MersenneTwister(minval));
+    EXPECT_NO_THROW(auto mt = MersenneTwister(minval + 1));
+    EXPECT_NO_THROW(auto mt = MersenneTwister(maxval / 10));
+    EXPECT_NO_THROW(auto mt = MersenneTwister(maxval / 2));
+    EXPECT_NO_THROW(auto mt = MersenneTwister(maxval - 1));
+    EXPECT_NO_THROW(auto mt = MersenneTwister(maxval));
 }
 
 TEST(TestMersenneTwister, GenerateUnitNormalRandomValueHasCorrectRange) {
@@ -52,8 +56,8 @@ TEST(TestMersenneTwister, GenerateUnitNormalRandomValueEquidistributed) {
 
 TEST(TestMersenneTwister, GenerateFloatingPointRandomValueInRange){
     MersenneTwister mt = MersenneTwister();
-    const float min = -25.678f;
-    const float max = 3242.342f;
+    const float min = -25.678F;
+    const float max = 3242.342F;
     const int num_iterations = 1000;
     for (int i = 0; i < num_iterations; ++i){
         double value = mt.generateFloatingPointRandomValue(min, max);
@@ -64,11 +68,11 @@ TEST(TestMersenneTwister, GenerateFloatingPointRandomValueInRange){
 
 TEST(TestMersenneTwister, GenerateFloatingPointRandomValueEquidistributed){
     MersenneTwister mt = MersenneTwister();
-    const double min = -300.0;
-    const double max = 700.0;
+    const float min = -300.0F;
+    const float max = 700.0F;
     const int num_iterations = 10000;
-    double sum = 0.0;
-    double variance_sum = 0.0;
+    double sum = 0.0F;
+    double variance_sum = 0.0F;
     double expected_value = (min + max) / 2.0;
     for (int i = 0; i < num_iterations; ++i){
         double value = mt.generateFloatingPointRandomValue(min, max);

@@ -5,30 +5,34 @@
 #include <limits>
 #include <cmath>
 
+static constexpr uint64_t minval = std::numeric_limits<uint64_t>::min();
+static constexpr uint64_t maxval = std::numeric_limits<uint64_t>::max();
+
+
 // Test that the lcg constructors do not fail
 TEST(TestXORShift, BlankConstructor) {
-    EXPECT_NO_THROW(XORShift());
+    EXPECT_NO_THROW(auto xsh = XORShift());
 }
 
 TEST(TestXORShift, SeedConstructor) {
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::min()));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::min() + 1));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::min() + 5));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::max() / 5));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::max() / 2));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::max() - 1));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::max()));
+    EXPECT_NO_THROW(auto xsh = XORShift(minval));
+    EXPECT_NO_THROW(auto xsh = XORShift(minval + 1));
+    EXPECT_NO_THROW(auto xsh = XORShift(minval + 5));
+    EXPECT_NO_THROW(auto xsh = XORShift(maxval / 5));
+    EXPECT_NO_THROW(auto xsh = XORShift(maxval / 2));
+    EXPECT_NO_THROW(auto xsh = XORShift(maxval - 1));
+    EXPECT_NO_THROW(auto xsh = XORShift(maxval));
 }
 
 
 TEST(TestXORShift, SeedAndConstantsConstructor) {
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::min(), 1, 2, 3));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::min() + 1, 79, 55555, std::numeric_limits<uint64_t>::max()));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::min() + 5, 4545, 9876567, 9876786));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::max() / 5, 1432, 6876, 3));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::max() / 2, 42, 42, 42));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::max() - 1, 2345678987, 9876543, 123422));
-    EXPECT_NO_THROW(XORShift(std::numeric_limits<uint64_t>::max(), 345679875, 2, 0));
+    EXPECT_NO_THROW(auto xsh = XORShift(minval, 1, 2, 3));
+    EXPECT_NO_THROW(auto xsh = XORShift(minval + 1, 79, 55555, maxval));
+    EXPECT_NO_THROW(auto xsh = XORShift(minval + 5, 4545, 9876567, 9876786));
+    EXPECT_NO_THROW(auto xsh = XORShift(maxval / 5, 1432, 6876, 3));
+    EXPECT_NO_THROW(auto xsh = XORShift(maxval / 2, 42, 42, 42));
+    EXPECT_NO_THROW(auto xsh = XORShift(maxval - 1, 2345678987, 9876543, 123422));
+    EXPECT_NO_THROW(auto xsh = XORShift(maxval, 345679875, 2, 0));
 }
 
 
@@ -65,8 +69,8 @@ TEST(TestXORShift, GenerateUnitNormalRandomValueEquidistributed) {
 
 TEST(TestXORShift, GenerateFloatingPointRandomValueInRange){
     XORShift xor_shift = XORShift();
-    const float min = -25.678f;
-    const float max = 3242.342f;
+    const float min = -25.678F;
+    const float max = 3242.342F;
     const int num_iterations = 1000;
     for (int i = 0; i < num_iterations; ++i){
         double value = xor_shift.generateFloatingPointRandomValue(min, max);
@@ -77,8 +81,8 @@ TEST(TestXORShift, GenerateFloatingPointRandomValueInRange){
 
 TEST(TestXORShift, GenerateFloatingPointRandomValueEquidistributed){
     XORShift xor_shift = XORShift();
-    const double min = -300.0;
-    const double max = 700.0;
+    const float min = -300.0F;
+    const float max = 700.0F;
     const int num_iterations = 10000;
     double sum = 0.0;
     double variance_sum = 0.0;
