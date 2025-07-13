@@ -57,8 +57,8 @@ template <FromCharsParsable T>
 std::optional<std::pair<T, T>> parse_min_and_max_numbers(const std::string &min_str, const std::string &max_str) {
     std::optional<T> min_value = parse_value<T>(min_str);
     std::optional<T> max_value = parse_value<T>(max_str);
-    if (!min_value.has_value() || !max_value.has_value()) return std::nullopt;
-    if (min_value.value() <= max_value.value()) return std::make_pair(min_value.value(), max_value.value());
+    if (!min_value.has_value() || !max_value.has_value()) {return std::nullopt;}
+    if (min_value.value() <= max_value.value()) {return std::make_pair(min_value.value(), max_value.value());}
     return std::nullopt;
 }
 
@@ -94,10 +94,14 @@ void ProgramRunner::determine_user_message_configuration(const bool error, const
     if (error){
         this->behaviour = ProgramBehaviour::Error;
         return;
-    } else if (show_version){
+    } 
+    
+    if (show_version){
         this->behaviour = ProgramBehaviour::Version;
         return;
-    } else if (show_help){
+    } 
+    
+    if (show_help){
         this->behaviour = ProgramBehaviour::Help;
         return;
     }
@@ -161,13 +165,11 @@ void ProgramRunner::determine_program_configuration(const ProgramRunner::RawArgu
     }
 
     determine_generation_range_configuration(raw_args.min_str, raw_args.max_str);
-
-    return;
 }
 
 ProgramRunner::RawArguments ProgramRunner::parse_args(int argc, char **argv) {
     const char* const short_opts = "+hva:m:M:c:t:";
-    const ::option long_opts[] = {
+    const ::option long_opts[] = { // NOLINT (cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
         {"help", no_argument, nullptr, 'h'},
         {"version", no_argument, nullptr, 'v'},
         {"algorithm", required_argument, nullptr, 'a'},
@@ -190,10 +192,11 @@ ProgramRunner::RawArguments ProgramRunner::parse_args(int argc, char **argv) {
     raw_arguments.type = std::nullopt;
 
     while (true) {
-        const auto opt = getopt_long(argc, argv, short_opts, long_opts, nullptr);
+        const auto opt = getopt_long(argc, argv, short_opts, long_opts, nullptr); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
 
-        if (opt == -1)
+        if (opt == -1){
             break;
+        }
 
         switch (opt) {
             case 'h':
@@ -217,9 +220,6 @@ ProgramRunner::RawArguments ProgramRunner::parse_args(int argc, char **argv) {
             case 't':
                 raw_arguments.type = std::string(optarg);
                 break;
-            case '?': // Unrecognized option
-                raw_arguments.error = true;
-                return raw_arguments;
             default:
                 raw_arguments.error = true;
                 return raw_arguments;
@@ -252,11 +252,9 @@ void ProgramRunner::create_prng() {
     if (this->prng == nullptr) {
         throw std::runtime_error("Failed to create PseudoRandomNumberGenerator instance");
     }
-
-    return;
 }
 
-ProgramRunner::ProgramRunner(int argc, char **argv, int warmup_iterations){
+ProgramRunner::ProgramRunner(int argc, char **argv, uint64_t warmup_iterations){
     RawArguments raw_arguments = parse_args(argc, argv);
     determine_program_configuration(raw_arguments);
     if (this->algorithm.has_value()) {
@@ -269,7 +267,9 @@ ProgramRunner::ProgramRunner(int argc, char **argv, int warmup_iterations){
 bool ProgramRunner::is_finished() {
     if (this->finished) {
         return true;
-    } else if ((this->count.has_value()) && (this->iteration >= this->count)) {
+    } 
+    
+    if ((this->count.has_value()) && (this->iteration >= this->count)) {
         this->finished = true;
         return true;
     } 
@@ -312,8 +312,8 @@ ProgramRunner::ProgramStatus ProgramRunner::iterate() {
         case ProgramBehaviour::GenerateFloating: {
             this->iteration++;
             double random_float = this->prng->generateFloatingPointRandomValue(
-                std::get<float>(this->min.value_or(0.0f)),
-                std::get<float>(this->max.value_or(1.0f))
+                std::get<float>(this->min.value_or(0.0F)),
+                std::get<float>(this->max.value_or(1.0F))
             );
             auto exit_code_based_on_count = is_finished() ? std::optional<int>(ProgramRunner::ExitCodeSuccess) : std::nullopt;
             return {std::to_string(random_float), std::nullopt, exit_code_based_on_count};
