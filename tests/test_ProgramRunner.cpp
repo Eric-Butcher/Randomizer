@@ -4,24 +4,43 @@
 constexpr const char* highest_i32_plus_one = "2147483648";
 constexpr const char* lowest_i32_minus_one = "-2147483649";
 constexpr const char* highest_u32_plus_one = "4294967296";
-constexpr const char* highest_float_plus_more = "3.402823467e+38";
-constexpr const char* lowest_float_minus_more = "-3.402823467e+38";
 
 struct ArgvBuilder {
     std::vector<std::string> args;
-    std::vector<char*> argv;
+    char **argv; 
 
     ArgvBuilder(std::initializer_list<std::string> init) : args(init) {
-        std::string program_name = "randomizer";
-        argv.push_back(const_cast<char*>(program_name.c_str()));
-        for (auto& s : args) {
-            argv.push_back(const_cast<char*>(s.c_str()));
+        std::string program_name = "this-should-not-matter";
+        args.emplace(args.begin(), program_name);
+        size_t null_terminator_arg_element = 1;
+        size_t all_args_size = args.size() + null_terminator_arg_element;
+        argv = new char*[all_args_size]; // NOLINT (cppcoreguidelines-owning-memory)
+
+        for (size_t i = 0; i < args.size(); ++i){
+            std::string this_arg = args[i];
+            size_t null_terminated_size = this_arg.size() + 1;
+            argv[i] = new char[null_terminated_size]; // NOLINT (cppcoreguidelines-owning-memory)
+            strncpy(argv[i], this_arg.c_str(), null_terminated_size);
+            argv[i][this_arg.size()] = '\0';
         }
-        argv.push_back(nullptr); // argv must be null-terminated
+
+        argv[args.size()] = nullptr;
     }
 
-    int argc() const { return static_cast<int>(argv.size() - 1); }
-    char** argv_ptr() { return argv.data(); }
+    ArgvBuilder(const ArgvBuilder& other) = delete;
+    ArgvBuilder(ArgvBuilder&& other) = delete;
+    ArgvBuilder& operator=(const ArgvBuilder& other) = delete;
+    ArgvBuilder& operator=(const ArgvBuilder&& other) = delete;
+
+    ~ArgvBuilder() {
+        for (size_t i = 0; i < args.size(); i++){
+            delete[] argv[i]; // NOLINT (cppcoreguidelines-owning-memory)
+        }
+        delete[] argv;
+    }
+
+    int argc() const { return static_cast<int>(args.size()); }
+    char** argv_ptr() const { return argv; }
 };
 
 TEST(TestProgramRunner, NoArgs){
@@ -145,7 +164,7 @@ TEST(TestProgramRunner, ExplicitAlgorithmMersenne){
 }
 
 TEST(TestProgramRunner, ExplicitAlgorithmInvalid){
-    ArgvBuilder builder({"--algorithm", "invalid-algorithm", "--min", "0", "-M" "10", "--count", "5", "-t", "int"});
+    ArgvBuilder builder({"--algorithm", "invalid-algorithm", "--min", "0", "-M", "10", "--count", "5", "-t", "int"});
     ProgramRunner program_runner = ProgramRunner(builder.argc(), builder.argv_ptr());
     ProgramRunner::ProgramStatus status = program_runner.run();
     ASSERT_TRUE(status.stderr_message.has_value());
