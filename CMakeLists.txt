@@ -15,8 +15,20 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 include_directories(include)
 
 # Automatically collect all source and header files
-file(GLOB_RECURSE SOURCES "src/*.cpp")
-file(GLOB_RECURSE HEADERS "include/*.hpp")
+set(SOURCES
+  "src/runner.cpp"
+  "src/prngs/linear_congruential_generator.cpp"
+  "src/prngs/mersenne_twister.cpp"
+  "src/prngs/prng.cpp"
+  "src/prngs/xorshift.cpp"
+)
+set(HEADERS
+  "include/linear_congruential_generator.hpp"
+  "include/mersenne_twister.hpp"
+  "include/prng.hpp"
+  "include/program_runner.hpp"
+  "include/xorshift.hpp"
+)
 
 # Define a library target for the main code
 add_library(randomizer_lib ${SOURCES} ${HEADERS})
@@ -24,7 +36,7 @@ target_include_directories(randomizer_lib PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 
 # Define main executable
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} "src/main.cpp")
 target_link_libraries(${PROJECT_NAME} PRIVATE randomizer_lib)
 
 # Make CPack install the binary in /usr/bin
@@ -36,7 +48,7 @@ install(FILES "${CMAKE_SOURCE_DIR}/docs/randomizer.1" DESTINATION "${CMAKE_INSTA
 
 # Add compiler warnings only for GCC and Clang
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    target_compile_options(randomizer_lib PRIVATE
+  target_compile_options(randomizer_lib PRIVATE
         -Wall
         -Wextra
         -Wshadow
@@ -44,7 +56,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         -Wpedantic
         -Werror
     )
-    target_compile_options(${PROJECT_NAME} PRIVATE
+  target_compile_options(${PROJECT_NAME} PRIVATE
         -Wall
         -Wextra
         -Wshadow
