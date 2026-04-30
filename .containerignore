@@ -1,0 +1,14 @@
+build/
+
+.git/
+.github/
+.gitignore
+
+.vscode/
+.idea/
+
+.containerignore
+Containerfile
+
+.clang*
+*.py

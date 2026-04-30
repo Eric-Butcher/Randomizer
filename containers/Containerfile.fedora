@@ -1,9 +1,27 @@
+FROM fedora:42 AS builder
+
+RUN dnf install -y \
+    gcc-c++ \
+    cmake \
+    make \
+    rpm-build
+
+WORKDIR /app
+COPY . .
+
+RUN mkdir build && cd build && \
+    cmake .. && \
+    make -j$(nproc) && \
+    cpack -G RPM
+
 FROM fedora:42
 
 RUN dnf install -y man man-pages man-db less --setopt='tsflags='
 
-COPY ../build/out/*.rpm .
-RUN dnf install -y $(ls *.rpm | head -n1) --setopt='tsflags=' && rm -rf ./*.rpm
+COPY --from=builder /app/build/out/*.rpm /tmp/
+
+RUN dnf install -y /tmp/*.rpm --setopt='tsflags=' && \
+    rm -rf /tmp/*.rpm
 
 RUN groupadd unprivileged-group && \
     useradd -g unprivileged-group -N -m unprivileged-user
