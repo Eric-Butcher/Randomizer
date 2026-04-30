@@ -53,17 +53,17 @@ sudo dnf install ./build/out/randomizer-<version>.rpm
 
 ## Containers
 
-If you do not wish to install the application directly on your host machine, container files are included which will install the application to be used in the container. One image is Debian based and installs the `.deb` archive and the other is Fedora based and installs the `.rpm` archive. Make sure you go through the steps to build and package the application with CMake before building the container(s).
+If you do not wish to install the application directly on your host machine, container files are included which will install the application to be used in the container. One image is Debian based and installs the `.deb` archive and the other is Fedora based and installs the `.rpm` archive.
 
 The containers can be created using [Podman](https://podman.io/) or [Docker](https://www.docker.com/). You must have the CLI for either program installed on your computer. The commands should be the same regardless of what container application you choose to use, just use the appropriate command name. 
 
 The Debian image can be created using the following command from the project's root directory:
 ```shell
-podman build -f containers/Containerfile.debian -t randomizer:debian
+podman build -f containers/Containerfile.debian -t randomizer:debian .
 ```
 and the Fedora image can be created using the command:
 ```shell
-podman build -f containers/Containerfile.fedora -t randomizer:fedora
+podman build -f containers/Containerfile.fedora -t randomizer:fedora .
 ```
 also from the project's root directory. 
 
