@@ -1,5 +1,6 @@
 #include "mersenne_twister.hpp"
 #include "prng.hpp"
+#include <cstddef>
 #include <cstdint>
 #include <limits>
 #include <vector>
